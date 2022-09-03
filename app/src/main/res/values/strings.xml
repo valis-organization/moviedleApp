@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">MoviedleApp</string>
+    <string name="button_random">Random Movie!</string>
+</resources>
