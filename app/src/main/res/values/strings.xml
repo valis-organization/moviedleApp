@@ -1,4 +1,8 @@
 <resources>
     <string name="app_name">MoviedleApp</string>
     <string name="button_random">Random Movie!</string>
+    //fragments
+    <string name="nav_home">Home</string>
+    <string name="nav_moviedle">Moviedle</string>
+    <string name="nav_profile">Profile</string>
 </resources>
