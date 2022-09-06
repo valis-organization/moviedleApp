@@ -7,17 +7,17 @@
 
     <fragment
         android:id="@+id/blankFragment"
-        android:name="moviedleapp.main.BlankFragment"
+        android:name="moviedleapp.main.MoviedleFragment"
         android:label="fragment_blank"
         tools:layout="@layout/fragment_moviedle" />
     <fragment
         android:id="@+id/blankFragment2"
-        android:name="moviedleapp.main.BlankFragment2"
+        android:name="moviedleapp.main.HomeFragment"
         android:label="fragment_blank2"
         tools:layout="@layout/fragment_home" />
     <fragment
         android:id="@+id/blankFragment3"
-        android:name="moviedleapp.main.BlankFragment3"
+        android:name="moviedleapp.main.ProfileFragment"
         android:label="fragment_blank3"
         tools:layout="@layout/fragment_profile" />
 </navigation>

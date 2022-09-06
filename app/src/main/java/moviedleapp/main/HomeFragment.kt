@@ -5,29 +5,19 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.TextView
+import androidx.test.internal.runner.junit4.statement.UiThreadStatement
+import androidx.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread
+import com.google.gson.Gson
+import moviedleapp.main.controllers.HomeFragmentController
+import okhttp3.OkHttpClient
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
+class HomeFragment : Fragment() {
 
-/**
- * A simple [Fragment] subclass.
- * Use the [BlankFragment2.newInstance] factory method to
- * create an instance of this fragment.
- */
-class BlankFragment2 : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
+    private val client = OkHttpClient()
+    private val rndMovieUrl = "http://109.207.149.50:8080/randomMovie"
+    private val gson = Gson()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -37,23 +27,20 @@ class BlankFragment2 : Fragment() {
         return inflater.inflate(R.layout.fragment_home, container, false)
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment BlankFragment2.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            BlankFragment2().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        val button = requireView().findViewById<Button>(R.id.button_rndMovie)
+        val rndMovieTextView = requireView().findViewById<TextView>(R.id.text_view_rnd_movie)
+        val serverResponseListener = object : ServerResponseListener {
+            override fun onReceivingRandomMovie(receivedJson: Movie) {
+                runOnUiThread {
+                    //TODO
+                  //  rndMovieTextView.text = receivedJson.title
                 }
             }
+        }
+        val fragmentController: HomeFragmentController =
+            HomeFragmentController(button, serverResponseListener)
+        fragmentController.initialize()
     }
 }
