@@ -3,21 +3,21 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/asd"
-    app:startDestination="@id/blankFragment">
+    app:startDestination="@id/moviedleFragment">
 
     <fragment
-        android:id="@+id/blankFragment"
-        android:name="moviedleapp.main.MoviedleFragment"
+        android:id="@+id/moviedleFragment"
+        android:name="moviedleapp.main.fragments.MoviedleFragment"
         android:label="fragment_blank"
         tools:layout="@layout/fragment_moviedle" />
     <fragment
-        android:id="@+id/blankFragment2"
-        android:name="moviedleapp.main.HomeFragment"
+        android:id="@+id/homeFragment"
+        android:name="moviedleapp.main.fragments.HomeFragment"
         android:label="fragment_blank2"
         tools:layout="@layout/fragment_home" />
     <fragment
-        android:id="@+id/blankFragment3"
-        android:name="moviedleapp.main.ProfileFragment"
+        android:id="@+id/profileFragment"
+        android:name="moviedleapp.main.fragments.ProfileFragment"
         android:label="fragment_blank3"
         tools:layout="@layout/fragment_profile" />
 </navigation>
