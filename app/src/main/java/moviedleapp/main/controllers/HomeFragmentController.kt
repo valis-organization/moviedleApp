@@ -4,36 +4,23 @@ import android.widget.Button
 import com.google.gson.Gson
 import kotlinx.coroutines.*
 import moviedleapp.main.Movie
-import moviedleapp.main.ServerResponseListener
-import moviedleapp.main.helpers.EndpointUrl
-import moviedleapp.main.helpers.RequestMaker
-import okhttp3.OkHttpClient
+import moviedleapp.main.Repository
+import moviedleapp.main.fragmentListeners.ServerResponseListener
 
 
 class HomeFragmentController(
-    private val rndMovieButton: Button,
+    rndMovieButton: Button,
     private val responseListener: ServerResponseListener
 ) {
-
-    private val client = OkHttpClient()
-    private val gson = Gson()
-
-    fun initialize() {
-        var randomMovie = Movie()
+    init {
+        var randomMovie: Movie
         rndMovieButton.setOnClickListener {
-            val job = GlobalScope.launch(Dispatchers.IO) { randomMovie = getRandomMovie() }
-            GlobalScope.launch(Dispatchers.Main) {
-                job.join()
-                responseListener.onReceivingRandomMovie(randomMovie)
+            GlobalScope.launch(Dispatchers.IO) {
+                randomMovie = Repository.getRandomMovie()
+                withContext(Dispatchers.Main) {
+                    responseListener.onReceivingRandomMovie(randomMovie)
+                }
             }
         }
-    }
-
-    private fun getRandomMovie(): Movie {
-        val responseFromServer = RequestMaker.makeGETRequest(client, EndpointUrl.randomMovieUrl())
-
-        val receivedMovieJson: Movie = gson.fromJson(responseFromServer, Movie::class.java)
-        println(receivedMovieJson.getTitle())
-        return receivedMovieJson
     }
 }

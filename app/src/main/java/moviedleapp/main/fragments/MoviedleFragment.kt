@@ -7,7 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ListView
 import moviedleapp.main.Movie
-import moviedleapp.main.MoviedleListener
+import moviedleapp.main.fragmentListeners.MoviedleListener
 import moviedleapp.main.R
 import moviedleapp.main.controllers.MoviedleFragmentController
 import moviedleapp.main.listView.ListModel
@@ -33,7 +33,6 @@ class MoviedleFragment : Fragment() {
             }
         }
         val fragmentController = MoviedleFragmentController(moviedleListener)
-        fragmentController.initialize()
     }
 
     private fun createMoviesListView(moviesList: ArrayList<Movie>) {

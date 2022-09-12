@@ -9,7 +9,7 @@ import android.widget.Button
 import android.widget.TextView
 import moviedleapp.main.Movie
 import moviedleapp.main.R
-import moviedleapp.main.ServerResponseListener
+import moviedleapp.main.fragmentListeners.ServerResponseListener
 import moviedleapp.main.controllers.HomeFragmentController
 
 class HomeFragment : Fragment() {
@@ -31,7 +31,5 @@ class HomeFragment : Fragment() {
             }
         }
         val fragmentController = HomeFragmentController(button, serverResponseListener)
-        fragmentController.initialize()
-
     }
 }
