@@ -15,7 +15,7 @@ class Repository {
         fun getAllMovies(): ArrayList<Movie> {
             val serverResponse = RequestMaker.makeGETRequest(client, EndpointUrl.allMovies())
             val itemType = object : TypeToken<List<Movie>>() {}.type
-
+            println(itemType)
             return gson.fromJson<List<Movie>>(serverResponse, itemType) as ArrayList<Movie>
         }
 

@@ -5,17 +5,19 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ListView
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import moviedleapp.main.Movie
 import moviedleapp.main.fragmentListeners.MoviedleListener
 import moviedleapp.main.R
 import moviedleapp.main.controllers.MoviedleFragmentController
 import moviedleapp.main.listView.ListModel
-import moviedleapp.main.listView.ListViewAdapter
+import moviedleapp.main.listView.RecyclerViewAdapter
 
 class MoviedleFragment : Fragment() {
 
-    private var listView :ListView? = null
+    private lateinit var recyclerView :RecyclerView
+    private lateinit var adapter: RecyclerViewAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -36,18 +38,29 @@ class MoviedleFragment : Fragment() {
     }
 
     private fun createMoviesListView(moviesList: ArrayList<Movie>) {
+        iterateMoviesTEMP(moviesList) // TEMP
         val listModelArray: ArrayList<ListModel> = ArrayList()
         val imageTEMP =
             R.drawable.place_holder_nodpi //TEMP, in future change it to image assigned to the movie
-        listView = requireView().findViewById(R.id.list_view)
+
+        recyclerView = requireView().findViewById(R.id.recycler_view)
+        recyclerView.layoutManager = LinearLayoutManager(activity)
+       // recyclerView.setHasFixedSize(true)
 
 
         for (movie in moviesList) {
             listModelArray.add(ListModel(movie.getTitle(), imageTEMP))
         }
-        val adapter = ListViewAdapter(requireContext(),listModelArray)
-
-        listView!!.adapter = adapter
+        println("List model size ${listModelArray.size}")
+       // val adapter = ListViewAdapter(requireContext(),listModelArray)
+       // adapter = RecyclerViewAdapter(listModelArray)
+        recyclerView.adapter = RecyclerViewAdapter(listModelArray)
     }
 
+    private fun iterateMoviesTEMP(movies : ArrayList<Movie>){
+        for(movie in movies){
+            println(movie.getTitle())
+        }
+        println("Movies list size ${movies.size}")
+    }
 }

@@ -4,6 +4,7 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/Users/Dawid/AndroidStudioProjects/MoviedleApp/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.196" />
+        <entry key="..\:/Users/Dawid/AndroidStudioProjects/MoviedleApp/app/src/main/res/drawable/ic_home.xml" value="0.211" />
         <entry key="..\:/Users/Dawid/AndroidStudioProjects/MoviedleApp/app/src/main/res/drawable/ic_launcher_background.xml" value="0.196" />
         <entry key="..\:/Users/Dawid/AndroidStudioProjects/MoviedleApp/app/src/main/res/drawable/ic_menu.xml" value="0.196" />
         <entry key="..\:/Users/Dawid/AndroidStudioProjects/MoviedleApp/app/src/main/res/drawable/ic_moviedle.xml" value="0.2985" />
@@ -11,6 +12,7 @@
         <entry key="..\:/Users/Dawid/AndroidStudioProjects/MoviedleApp/app/src/main/res/drawable/ic_movies.xml" value="0.196" />
         <entry key="..\:/Users/Dawid/AndroidStudioProjects/MoviedleApp/app/src/main/res/drawable/ic_profile.xml" value="0.2985" />
         <entry key="..\:/Users/Dawid/AndroidStudioProjects/MoviedleApp/app/src/main/res/layout/activity_main.xml" value="0.23316062176165803" />
+        <entry key="..\:/Users/Dawid/AndroidStudioProjects/MoviedleApp/app/src/main/res/layout/asd.xml" value="0.35778985507246375" />
         <entry key="..\:/Users/Dawid/AndroidStudioProjects/MoviedleApp/app/src/main/res/layout/fragment_blank.xml" value="0.35778985507246375" />
         <entry key="..\:/Users/Dawid/AndroidStudioProjects/MoviedleApp/app/src/main/res/layout/fragment_blank2.xml" value="0.35778985507246375" />
         <entry key="..\:/Users/Dawid/AndroidStudioProjects/MoviedleApp/app/src/main/res/layout/fragment_blank3.xml" value="0.14537037037037037" />
