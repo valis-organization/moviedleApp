@@ -13,7 +13,7 @@
         android:layout_marginBottom="30dp"
         android:text="@string/classic_find_movie"
         android:textSize="30sp"
-        app:layout_constraintBottom_toTopOf="@id/search_bar"
+        app:layout_constraintBottom_toTopOf="@id/search_view"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent" />
 
@@ -27,13 +27,15 @@
         app:layout_constraintTop_toBottomOf="@id/text_view_find_movie" />
 
     <SearchView
-        android:id="@+id/search_bar"
+        android:id="@+id/search_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="40dp"
         android:layout_marginTop="120dp"
         android:layout_marginRight="40dp"
         android:background="@color/purple_200"
+        android:iconifiedByDefault="false"
+        android:queryHint="@string/classic_search_movie"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -46,8 +48,7 @@
         android:layout_marginRight="40dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/search_bar"
-        tools:listitem="@layout/list_item"
-        />
+        app:layout_constraintTop_toBottomOf="@id/search_view"
+        tools:listitem="@layout/list_item" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

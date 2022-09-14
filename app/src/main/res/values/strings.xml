@@ -9,4 +9,6 @@
     //moviedle
     <string name="classic_find_movie">Guess today\'s Movie!</string>
     <string name="classic_type_movie">Type any movie to begin!</string>
+    <string name="classic_search_movie">Type movie name…</string>
+    <string name="place_holder">PLACE_HOLDER</string>
 </resources>
