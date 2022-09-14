@@ -1,7 +1,6 @@
 package moviedleapp.main.controllers
 
 import android.widget.Button
-import com.google.gson.Gson
 import kotlinx.coroutines.*
 import moviedleapp.main.Movie
 import moviedleapp.main.Repository

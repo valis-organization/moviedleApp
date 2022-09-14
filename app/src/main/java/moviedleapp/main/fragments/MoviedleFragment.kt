@@ -17,7 +17,6 @@ import moviedleapp.main.listView.RecyclerViewAdapter
 class MoviedleFragment : Fragment() {
 
     private lateinit var recyclerView :RecyclerView
-    private lateinit var adapter: RecyclerViewAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -45,15 +44,10 @@ class MoviedleFragment : Fragment() {
 
         recyclerView = requireView().findViewById(R.id.recycler_view)
         recyclerView.layoutManager = LinearLayoutManager(activity)
-       // recyclerView.setHasFixedSize(true)
-
 
         for (movie in moviesList) {
             listModelArray.add(ListModel(movie.getTitle(), imageTEMP))
         }
-        println("List model size ${listModelArray.size}")
-       // val adapter = ListViewAdapter(requireContext(),listModelArray)
-       // adapter = RecyclerViewAdapter(listModelArray)
         recyclerView.adapter = RecyclerViewAdapter(listModelArray)
     }
 
