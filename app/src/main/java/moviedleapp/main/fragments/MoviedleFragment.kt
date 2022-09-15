@@ -15,6 +15,7 @@ import moviedleapp.main.R
 import moviedleapp.main.controllers.MoviedleFragmentController
 import moviedleapp.main.listView.ListModel
 import moviedleapp.main.listView.RecyclerViewAdapter
+import moviedleapp.main.listView.RecyclerViewListener
 
 class MoviedleFragment : Fragment() {
 
@@ -53,6 +54,13 @@ class MoviedleFragment : Fragment() {
 
         searchView = requireView().findViewById(R.id.search_view)
         searchView.clearFocus()
+        val recyclerViewListener = object : RecyclerViewListener {
+            override fun onItemClick(position: Int, title: String) {
+                println("Item $position clicked.")
+                println("Item name: $title")
+                searchView.setQuery(title, false)
+            }
+        }
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 TODO("Not yet implemented")
@@ -61,7 +69,10 @@ class MoviedleFragment : Fragment() {
             override fun onQueryTextChange(newText: String?): Boolean {
                 if (newText != null) {
                     recyclerView.adapter =
-                        RecyclerViewAdapter(filterMovies(newText, listModelArray))
+                        RecyclerViewAdapter(
+                            filterMovies(newText.lowercase(), listModelArray),
+                            recyclerViewListener
+                        )
                 } else {
                     Toast.makeText(activity, "No movie found", Toast.LENGTH_SHORT).show()
                 }
@@ -78,7 +89,7 @@ class MoviedleFragment : Fragment() {
         val filteredList: ArrayList<ListModel> = ArrayList()
         if (input.isNotBlank()) {
             for (listModel in listModelArray) {
-                if (listModel.getTitle().startsWith(input.lowercase())) {
+                if (listModel.getTitle().lowercase().startsWith(input)) {
                     filteredList.add(listModel)
                 }
             }
