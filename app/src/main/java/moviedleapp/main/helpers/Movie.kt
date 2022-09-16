@@ -1,4 +1,4 @@
-package moviedleapp.main
+package moviedleapp.main.helpers
 
 class Movie(
     private val id: Int = 1,

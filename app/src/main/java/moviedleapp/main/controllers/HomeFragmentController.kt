@@ -2,7 +2,7 @@ package moviedleapp.main.controllers
 
 import android.widget.Button
 import kotlinx.coroutines.*
-import moviedleapp.main.Movie
+import moviedleapp.main.helpers.Movie
 import moviedleapp.main.Repository
 import moviedleapp.main.fragmentListeners.ServerResponseListener
 

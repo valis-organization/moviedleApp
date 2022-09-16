@@ -7,7 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
-import moviedleapp.main.Movie
+import moviedleapp.main.helpers.Movie
 import moviedleapp.main.R
 import moviedleapp.main.fragmentListeners.ServerResponseListener
 import moviedleapp.main.controllers.HomeFragmentController

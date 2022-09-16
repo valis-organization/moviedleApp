@@ -4,8 +4,9 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import java.io.IOException
 
-class RequestMaker {
+class ServerApi {
     companion object {
+
         fun makeGETRequest(client: OkHttpClient, requestUrl: String): String {
             val request = Request.Builder()
                 .url(requestUrl)

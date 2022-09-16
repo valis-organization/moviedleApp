@@ -5,14 +5,19 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import android.widget.SearchView
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import moviedleapp.main.Movie
+import com.google.android.material.snackbar.Snackbar
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import moviedleapp.main.helpers.Movie
 import moviedleapp.main.fragmentListeners.MoviedleListener
 import moviedleapp.main.R
+import moviedleapp.main.Repository
 import moviedleapp.main.controllers.MoviedleFragmentController
+import moviedleapp.main.helpers.moviedleClassic.MovieWIthComparedAttr
 import moviedleapp.main.listView.ListModel
 import moviedleapp.main.listView.RecyclerViewAdapter
 import moviedleapp.main.listView.RecyclerViewListener
@@ -21,6 +26,8 @@ class MoviedleFragment : Fragment() {
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var searchView: SearchView
+    private lateinit var chosenMovie: MovieWIthComparedAttr
+    private lateinit var movieNotFoundInformer: Snackbar
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -37,6 +44,7 @@ class MoviedleFragment : Fragment() {
                 createMovieListView(moviesList)
             }
         }
+        movieNotFoundInformer = Snackbar.make(view, "No movie found", Snackbar.LENGTH_SHORT)
         val fragmentController = MoviedleFragmentController(moviedleListener)
     }
 
@@ -50,6 +58,7 @@ class MoviedleFragment : Fragment() {
 
         for (movie in moviesList) {
             listModelArray.add(ListModel(movie.getTitle(), imageTEMP))
+
         }
 
         searchView = requireView().findViewById(R.id.search_view)
@@ -63,18 +72,31 @@ class MoviedleFragment : Fragment() {
         }
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
-                TODO("Not yet implemented")
+
+                if (query != null && query.isNotBlank() && doesMovieExists(query, moviesList)) {
+                    lifecycleScope.launch(Dispatchers.IO) {
+                        chosenMovie = Repository.guessMovie(query)
+                    }
+                } else {
+                    movieNotFoundInformer.show()
+                }
+
+                return false
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
                 if (newText != null) {
+                    val filteredMovies = filterMovies(newText.lowercase(), listModelArray)
                     recyclerView.adapter =
                         RecyclerViewAdapter(
-                            filterMovies(newText.lowercase(), listModelArray),
+                            filteredMovies,
                             recyclerViewListener
                         )
-                } else {
-                    Toast.makeText(activity, "No movie found", Toast.LENGTH_SHORT).show()
+                    if (filteredMovies.isEmpty() && !movieNotFoundInformer.isShown) {
+                        movieNotFoundInformer.show()
+                    } else if (filteredMovies.isNotEmpty()) {
+                        movieNotFoundInformer.dismiss()
+                    }
                 }
                 return true
             }
@@ -95,6 +117,15 @@ class MoviedleFragment : Fragment() {
             }
         }
         return filteredList
+    }
+
+    private fun doesMovieExists(input: String, moviesList: ArrayList<Movie>): Boolean {
+        for (movie in moviesList) {
+            if (movie.getTitle() == input) {
+                return true
+            }
+        }
+        return false
     }
 
 }
