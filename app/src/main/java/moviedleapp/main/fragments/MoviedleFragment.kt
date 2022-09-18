@@ -39,25 +39,44 @@ class MoviedleFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        searchView = requireView().findViewById(R.id.search_view)
+        recyclerView = requireView().findViewById(R.id.recycler_view)
+        val fragmentController : MoviedleFragmentController
         val moviedleListener = object : MoviedleListener {
-            override fun addMoviesToListView(moviesList: ArrayList<Movie>) {
-                createMovieListView(moviesList)
+            override fun addMoviesToListView(allMovies: ArrayList<Movie>) {
+               // createMovieListView(allMovies)
+                TODO("Not yet implemented")
+            }
+
+            override fun getSearchView(): SearchView {
+                return searchView
+            }
+
+            override fun getRecyclerView(): RecyclerView {
+                return recyclerView
+            }
+
+            override fun guessMovie(title: String) {
+                lifecycleScope.launch(Dispatchers.IO) {
+                    chosenMovie = Repository.guessMovie(title)
+                }
             }
         }
         movieNotFoundInformer = Snackbar.make(view, "No movie found", Snackbar.LENGTH_SHORT)
-        val fragmentController = MoviedleFragmentController(moviedleListener)
+        fragmentController = MoviedleFragmentController(moviedleListener)
     }
+/*
 
-    private fun createMovieListView(moviesList: ArrayList<Movie>) {
-        val listModelArray: ArrayList<ListModel> = ArrayList()
+    private fun createMovieListView(allMovies: ArrayList<Movie>) {
+        val moviesToChooseView: ArrayList<ListModel> = ArrayList()
         val imageTEMP =
             R.drawable.place_holder_nodpi //TEMP, in future change it to image assigned to the movie
 
         recyclerView = requireView().findViewById(R.id.recycler_view)
         recyclerView.layoutManager = LinearLayoutManager(activity)
 
-        for (movie in moviesList) {
-            listModelArray.add(ListModel(movie.getTitle(), imageTEMP))
+        for (movie in allMovies) {
+            moviesToChooseView.add(ListModel(movie.getTitle(), imageTEMP))
 
         }
 
@@ -73,10 +92,11 @@ class MoviedleFragment : Fragment() {
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
 
-                if (query != null && query.isNotBlank() && doesMovieExists(query, moviesList)) {
+                if (query != null && query.isNotBlank() && doesMovieExists(query, allMovies)) {
                     lifecycleScope.launch(Dispatchers.IO) {
                         chosenMovie = Repository.guessMovie(query)
                     }
+
                 } else {
                     movieNotFoundInformer.show()
                 }
@@ -86,7 +106,7 @@ class MoviedleFragment : Fragment() {
 
             override fun onQueryTextChange(newText: String?): Boolean {
                 if (newText != null) {
-                    val filteredMovies = filterMovies(newText.lowercase(), listModelArray)
+                    val filteredMovies = filterMovies(newText.lowercase(), moviesToChooseView)
                     recyclerView.adapter =
                         RecyclerViewAdapter(
                             filteredMovies,
@@ -127,5 +147,6 @@ class MoviedleFragment : Fragment() {
         }
         return false
     }
+*/
 
 }
