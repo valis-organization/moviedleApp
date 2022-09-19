@@ -58,7 +58,7 @@ class MoviedleFragmentController(
                             filteredMovies,
                             recyclerViewListener
                         )
-                    if (filteredMovies.isEmpty()) {
+                    if (filteredMovies.isEmpty() && newText.isNotBlank()) {
                         moviedleListener.showMovieNotFoundNotification()
                     } else if (filteredMovies.isNotEmpty()) {
                         moviedleListener.hideMovieNotFoundNotification()
@@ -66,7 +66,6 @@ class MoviedleFragmentController(
                 }
                 return true
             }
-
         })
     }
 
