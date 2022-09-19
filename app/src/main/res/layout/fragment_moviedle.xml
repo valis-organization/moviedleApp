@@ -26,6 +26,20 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/text_view_find_movie" />
 
+    <TextView
+        android:id="@+id/movie_not_found_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp"
+        android:background="@color/purple_500"
+        android:gravity="center"
+        android:text="@string/movie_not_found"
+        android:visibility="invisible"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/search_view" />
+
     <SearchView
         android:id="@+id/search_view"
         android:layout_width="match_parent"

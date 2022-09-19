@@ -5,7 +5,6 @@ import androidx.recyclerview.widget.RecyclerView
 import moviedleapp.main.helpers.Movie
 
 interface MoviedleListener {
-    fun addMoviesToListView(allMovies: ArrayList<Movie>)
 
     fun guessMovie(title: String)
 
@@ -13,4 +12,7 @@ interface MoviedleListener {
 
     fun getRecyclerView() : RecyclerView
 
+    fun showMovieNotFoundNotification()
+
+    fun hideMovieNotFoundNotification()
 }

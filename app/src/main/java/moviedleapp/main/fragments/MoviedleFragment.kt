@@ -6,28 +6,26 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.SearchView
+import android.widget.TextView
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import moviedleapp.main.helpers.Movie
 import moviedleapp.main.fragmentListeners.MoviedleListener
 import moviedleapp.main.R
 import moviedleapp.main.Repository
 import moviedleapp.main.controllers.MoviedleFragmentController
 import moviedleapp.main.helpers.moviedleClassic.MovieWIthComparedAttr
-import moviedleapp.main.listView.ListModel
-import moviedleapp.main.listView.RecyclerViewAdapter
-import moviedleapp.main.listView.RecyclerViewListener
 
 class MoviedleFragment : Fragment() {
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var searchView: SearchView
     private lateinit var chosenMovie: MovieWIthComparedAttr
-    private lateinit var movieNotFoundInformer: Snackbar
+    private lateinit var movieNotFoundInformer: TextView
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -38,15 +36,12 @@ class MoviedleFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        var allMovies: ArrayList<Movie>
         searchView = requireView().findViewById(R.id.search_view)
         recyclerView = requireView().findViewById(R.id.recycler_view)
-        val fragmentController : MoviedleFragmentController
+        recyclerView.layoutManager = LinearLayoutManager(activity)
+        movieNotFoundInformer = requireView().findViewById(R.id.movie_not_found_view)
         val moviedleListener = object : MoviedleListener {
-            override fun addMoviesToListView(allMovies: ArrayList<Movie>) {
-               // createMovieListView(allMovies)
-                TODO("Not yet implemented")
-            }
 
             override fun getSearchView(): SearchView {
                 return searchView
@@ -56,97 +51,28 @@ class MoviedleFragment : Fragment() {
                 return recyclerView
             }
 
+            override fun showMovieNotFoundNotification() {
+                movieNotFoundInformer.visibility = View.VISIBLE
+            }
+
+            override fun hideMovieNotFoundNotification() {
+                movieNotFoundInformer.visibility = View.GONE
+            }
+
             override fun guessMovie(title: String) {
                 lifecycleScope.launch(Dispatchers.IO) {
-                    chosenMovie = Repository.guessMovie(title)
+                    chosenMovie = Repository.getChosenMovieResult(title)
                 }
             }
         }
-        movieNotFoundInformer = Snackbar.make(view, "No movie found", Snackbar.LENGTH_SHORT)
-        fragmentController = MoviedleFragmentController(moviedleListener)
-    }
-/*
-
-    private fun createMovieListView(allMovies: ArrayList<Movie>) {
-        val moviesToChooseView: ArrayList<ListModel> = ArrayList()
-        val imageTEMP =
-            R.drawable.place_holder_nodpi //TEMP, in future change it to image assigned to the movie
-
-        recyclerView = requireView().findViewById(R.id.recycler_view)
-        recyclerView.layoutManager = LinearLayoutManager(activity)
-
-        for (movie in allMovies) {
-            moviesToChooseView.add(ListModel(movie.getTitle(), imageTEMP))
-
-        }
-
-        searchView = requireView().findViewById(R.id.search_view)
-        searchView.clearFocus()
-        val recyclerViewListener = object : RecyclerViewListener {
-            override fun onItemClick(position: Int, title: String) {
-                println("Item $position clicked.")
-                println("Item name: $title")
-                searchView.setQuery(title, false)
+        val fragmentController = MoviedleFragmentController(moviedleListener)
+        lifecycleScope.launch(Dispatchers.IO) {
+            allMovies = Repository.getAllMovies()
+            withContext(Dispatchers.Main) {
+                fragmentController.createMovieListView(allMovies)
             }
         }
-        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(query: String?): Boolean {
 
-                if (query != null && query.isNotBlank() && doesMovieExists(query, allMovies)) {
-                    lifecycleScope.launch(Dispatchers.IO) {
-                        chosenMovie = Repository.guessMovie(query)
-                    }
-
-                } else {
-                    movieNotFoundInformer.show()
-                }
-
-                return false
-            }
-
-            override fun onQueryTextChange(newText: String?): Boolean {
-                if (newText != null) {
-                    val filteredMovies = filterMovies(newText.lowercase(), moviesToChooseView)
-                    recyclerView.adapter =
-                        RecyclerViewAdapter(
-                            filteredMovies,
-                            recyclerViewListener
-                        )
-                    if (filteredMovies.isEmpty() && !movieNotFoundInformer.isShown) {
-                        movieNotFoundInformer.show()
-                    } else if (filteredMovies.isNotEmpty()) {
-                        movieNotFoundInformer.dismiss()
-                    }
-                }
-                return true
-            }
-
-        })
     }
-
-    private fun filterMovies(
-        input: String,
-        listModelArray: ArrayList<ListModel>
-    ): ArrayList<ListModel> {
-        val filteredList: ArrayList<ListModel> = ArrayList()
-        if (input.isNotBlank()) {
-            for (listModel in listModelArray) {
-                if (listModel.getTitle().lowercase().startsWith(input)) {
-                    filteredList.add(listModel)
-                }
-            }
-        }
-        return filteredList
-    }
-
-    private fun doesMovieExists(input: String, moviesList: ArrayList<Movie>): Boolean {
-        for (movie in moviesList) {
-            if (movie.getTitle() == input) {
-                return true
-            }
-        }
-        return false
-    }
-*/
 
 }

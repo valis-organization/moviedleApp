@@ -1,18 +1,9 @@
 package moviedleapp.main.controllers
 
 import android.widget.SearchView
-import androidx.lifecycle.lifecycleScope
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import moviedleapp.main.R
 import moviedleapp.main.helpers.Movie
-import moviedleapp.main.Repository
 import moviedleapp.main.fragmentListeners.MoviedleListener
-import moviedleapp.main.helpers.moviedleClassic.MovieWIthComparedAttr
 import moviedleapp.main.listView.ListModel
 import moviedleapp.main.listView.RecyclerViewAdapter
 import moviedleapp.main.listView.RecyclerViewListener
@@ -21,39 +12,31 @@ import moviedleapp.main.listView.RecyclerViewListener
 class MoviedleFragmentController(
     private val moviedleListener: MoviedleListener
 ) {
-    private lateinit var allMovies: ArrayList<Movie>
-    init {
-        GlobalScope.launch(Dispatchers.IO) {
-            allMovies = Repository.getAllMovies()
-            withContext(Dispatchers.Main) {
-                moviedleListener.addMoviesToListView(allMovies)
-                createMovieListView()
-            }
-        }
-    }
-
-
-    fun createMovieListView() {
+    fun createMovieListView(allMovies: ArrayList<Movie>) {
         val moviesToChooseView: ArrayList<ListModel> = ArrayList()
         val imageTEMP =
             R.drawable.place_holder_nodpi //TEMP, in future change it to image assigned to the movie
-
         for (movie in allMovies) {
             moviesToChooseView.add(ListModel(movie.getTitle(), imageTEMP))
         }
-        val searchView =  moviedleListener.getSearchView()
+        val searchView = moviedleListener.getSearchView()
         searchView.clearFocus()
-        setSearchViewListener(searchView,moviedleListener,moviesToChooseView)
+        setSearchViewListener(searchView, moviedleListener, moviesToChooseView, allMovies)
     }
 
-    private fun setSearchViewListener(searchView : SearchView,moviedleListener: MoviedleListener,moviesToChooseView: ArrayList<ListModel>){
+    private fun setSearchViewListener(
+        searchView: SearchView,
+        moviedleListener: MoviedleListener,
+        moviesToChooseView: ArrayList<ListModel>,
+        allMovies: ArrayList<Movie>,
+    ) {
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
 
                 if (query != null && query.isNotBlank() && doesMovieExists(query, allMovies)) {
-                   moviedleListener.guessMovie(query)
+                    moviedleListener.guessMovie(query)
                 } else {
-               //     movieNotFoundInformer.show() TODO
+                    moviedleListener.showMovieNotFoundNotification()
                 }
 
                 return false
@@ -75,11 +58,11 @@ class MoviedleFragmentController(
                             filteredMovies,
                             recyclerViewListener
                         )
-          /*          if (filteredMovies.isEmpty() && !movieNotFoundInformer.isShown) { TODO
-                        movieNotFoundInformer.show()
+                    if (filteredMovies.isEmpty()) {
+                        moviedleListener.showMovieNotFoundNotification()
                     } else if (filteredMovies.isNotEmpty()) {
-                        movieNotFoundInformer.dismiss()
-                    }*/
+                        moviedleListener.hideMovieNotFoundNotification()
+                    }
                 }
                 return true
             }

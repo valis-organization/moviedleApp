@@ -30,7 +30,7 @@ class Repository {
             return receivedMovieJson
         }
 
-        fun guessMovie(movieTitle: String): MovieWIthComparedAttr {
+        fun getChosenMovieResult(movieTitle: String): MovieWIthComparedAttr {
             val responseFromServer =
                 ServerApi.makeGETRequest(client, EndpointUrl.guessMovie(movieTitle))
 
