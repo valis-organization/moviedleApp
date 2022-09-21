@@ -1,25 +1,16 @@
 package moviedleapp.main.controllers
 
 import android.widget.Button
-import kotlinx.coroutines.*
-import moviedleapp.main.helpers.Movie
-import moviedleapp.main.Repository
-import moviedleapp.main.fragmentListeners.ServerResponseListener
+import moviedleapp.main.fragmentListeners.HomeListener
 
 
 class HomeFragmentController(
     rndMovieButton: Button,
-    private val responseListener: ServerResponseListener
+    private val responseListener: HomeListener
 ) {
     init {
-        var randomMovie: Movie
         rndMovieButton.setOnClickListener {
-            GlobalScope.launch(Dispatchers.IO) {
-                randomMovie = Repository.getRandomMovie()
-                withContext(Dispatchers.Main) {
-                    responseListener.onReceivingRandomMovie(randomMovie)
-                }
-            }
+            responseListener.getAndShowRndMovie()
         }
     }
 }
