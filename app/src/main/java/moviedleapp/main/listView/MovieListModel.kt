@@ -1,6 +1,6 @@
 package moviedleapp.main.listView
 
-class ListModel(private var name: String, private var imageSource: Int) {
+class MovieListModel(private var name: String, private var imageSource: Int) {
 
     fun getTitle(): String {
         return name

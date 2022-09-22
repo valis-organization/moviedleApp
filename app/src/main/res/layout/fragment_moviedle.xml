@@ -60,9 +60,26 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="40dp"
         android:layout_marginRight="40dp"
+        android:background="#FBEBFD"
+        android:fadeScrollbars="false"
+        android:scrollbars="vertical"
+        app:layout_constraintHeight_max="180dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/search_view"
-        tools:listitem="@layout/list_item" />
+        tools:listitem="@layout/list_movie_item" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/guessed_movies"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:fadeScrollbars="false"
+        android:scrollbars="vertical"
+        app:layout_constraintHeight_max="275dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/recycler_view"
+        tools:listitem="@layout/temp_guessed_movie_item" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

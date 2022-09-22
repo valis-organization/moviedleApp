@@ -1,6 +1,6 @@
 package moviedleapp.main.helpers
 
-class Movie(
+data class Movie(
     private val id: Int = 1,
     private val title: String = "UNKNOWN",
     private val type: String = "UNKNOWN",

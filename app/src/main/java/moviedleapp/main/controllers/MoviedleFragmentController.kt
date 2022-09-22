@@ -1,10 +1,14 @@
 package moviedleapp.main.controllers
 
+import android.view.View
 import android.widget.SearchView
 import moviedleapp.main.R
 import moviedleapp.main.helpers.Movie
 import moviedleapp.main.fragmentListeners.MoviedleListener
-import moviedleapp.main.listView.ListModel
+import moviedleapp.main.helpers.moviedleClassic.ComparedAttributes
+import moviedleapp.main.helpers.moviedleClassic.GuessResultHelper
+import moviedleapp.main.helpers.moviedleClassic.MovieWIthComparedAttr
+import moviedleapp.main.listView.MovieListModel
 import moviedleapp.main.listView.RecyclerViewAdapter
 import moviedleapp.main.listView.RecyclerViewListener
 
@@ -13,21 +17,38 @@ class MoviedleFragmentController(
     private val moviedleListener: MoviedleListener
 ) {
     fun createMovieListView(allMovies: ArrayList<Movie>) {
-        val moviesToChooseView: ArrayList<ListModel> = ArrayList()
+        val moviesToChooseView: ArrayList<MovieListModel> = ArrayList()
         val imageTEMP =
             R.drawable.place_holder_nodpi //TEMP, in future change it to image assigned to the movie
         for (movie in allMovies) {
-            moviesToChooseView.add(ListModel(movie.getTitle(), imageTEMP))
+            moviesToChooseView.add(MovieListModel(movie.getTitle(), imageTEMP))
         }
         val searchView = moviedleListener.getSearchView()
         searchView.clearFocus()
         setSearchViewListener(searchView, moviedleListener, moviesToChooseView, allMovies)
     }
 
+    fun handleResult(result: MovieWIthComparedAttr) {
+        if(isGuessSuccessful(result.getComparedAttributes())){
+            println("Successfully guessed movie: ${result.getMovie().getTitle()}, congratulations!")
+             moviedleListener.getSearchView().visibility = View.GONE
+        }else{
+            println("Unlucky :/" +
+                    "type: ${result.getComparedAttributes().type}" +
+                    "director: ${result.getComparedAttributes().director}" +
+                    "genre: ${result.getComparedAttributes().genre}" +
+                    "release year: ${result.getComparedAttributes().releaseYear}" +
+                    "type: ${result.getComparedAttributes().rank
+                    }"
+            )
+        }
+
+    }
+
     private fun setSearchViewListener(
         searchView: SearchView,
         moviedleListener: MoviedleListener,
-        moviesToChooseView: ArrayList<ListModel>,
+        moviesToChooseView: ArrayList<MovieListModel>,
         allMovies: ArrayList<Movie>,
     ) {
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
@@ -69,13 +90,20 @@ class MoviedleFragmentController(
         })
     }
 
+    private fun isGuessSuccessful(attributes: ComparedAttributes): Boolean {
+        if(GuessResultHelper.areAllAttributesCorrect(attributes)){
+            return true
+        }
+        return false
+    }
+
     private fun filterMovies(
         input: String,
-        listModelArray: ArrayList<ListModel>
-    ): ArrayList<ListModel> {
-        val filteredList: ArrayList<ListModel> = ArrayList()
+        movieListModelArray: ArrayList<MovieListModel>
+    ): ArrayList<MovieListModel> {
+        val filteredList: ArrayList<MovieListModel> = ArrayList()
         if (input.isNotBlank()) {
-            for (listModel in listModelArray) {
+            for (listModel in movieListModelArray) {
                 if (listModel.getTitle().lowercase().startsWith(input)) {
                     filteredList.add(listModel)
                 }

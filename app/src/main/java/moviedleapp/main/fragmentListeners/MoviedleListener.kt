@@ -12,6 +12,8 @@ interface MoviedleListener {
 
     fun getRecyclerView() : RecyclerView
 
+    fun getChosenMoviesListView() : RecyclerView
+
     fun showMovieNotFoundNotification()
 
     fun hideMovieNotFoundNotification()
