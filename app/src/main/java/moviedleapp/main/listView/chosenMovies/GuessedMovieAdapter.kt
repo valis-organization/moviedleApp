@@ -43,11 +43,9 @@ class GuessedMovieAdapter(private val chosenMovies: ArrayList<ChosenMovieModel>)
         determineColour(chosenMovies[position].getRank(),viewHolder.rank)
     }
 
-    override fun getItemCount(): Int {
-        return chosenMovies.size
-    }
+    override fun getItemCount() = chosenMovies.size
 
-    fun determineColour(resultType: String,view : TextView) {
+    private fun determineColour(resultType: String, view : TextView) {
         when (resultType) {
             ResultType.CORRECT.toString() -> {
                 view.setBackgroundColor(Color.parseColor("#228C22"))

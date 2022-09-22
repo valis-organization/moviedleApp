@@ -1,20 +1,10 @@
 package moviedleapp.main.fragmentListeners
 
-import android.widget.SearchView
-import androidx.recyclerview.widget.RecyclerView
-import moviedleapp.main.helpers.Movie
+import moviedleapp.main.listView.chosenMovies.ChosenMovieModel
 
 interface MoviedleListener {
 
-    fun guessMovie(title: String)
+   fun showResult(chosenMovie: ChosenMovieModel)
 
-    fun getSearchView(): SearchView
-
-    fun getRecyclerView() : RecyclerView
-
-    fun getChosenMoviesListView() : RecyclerView
-
-    fun showMovieNotFoundNotification()
-
-    fun hideMovieNotFoundNotification()
+   fun onWinning()
 }

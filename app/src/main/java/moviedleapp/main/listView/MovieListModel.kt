@@ -9,4 +9,5 @@ class MovieListModel(private var name: String, private var imageSource: Int) {
     fun getImage(): Int {
         return imageSource
     }
+
 }

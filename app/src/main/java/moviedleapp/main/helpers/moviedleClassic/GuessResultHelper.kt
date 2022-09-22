@@ -2,28 +2,12 @@ package moviedleapp.main.helpers.moviedleClassic
 
 import moviedleapp.main.helpers.ResultType
 
-class GuessResultHelper {
-    companion object {
-        fun areAllAttributesCorrect(attributes: ComparedAttributes): Boolean {
-            if (isAttributeCorrect(attributes.director)) {
-                if (isAttributeCorrect(attributes.genre)) {
-                    if (isAttributeCorrect(attributes.rank)) {
-                        if (isAttributeCorrect(attributes.type)) {
-                            if (isAttributeCorrect(attributes.releaseYear)) {
-                                return true
-                            }
-                        }
-                    }
-                }
-            }
-            return false
-        }
-
-        private fun isAttributeCorrect(attribute: ResultType): Boolean {
-            if (attribute == ResultType.CORRECT) {
-                return true
-            }
-            return false
-        }
-    }
+fun areAllAttributesCorrect(attributes: ComparedAttributes): Boolean {
+    return isAttributeCorrect(attributes.director) &&
+            isAttributeCorrect(attributes.genre) &&
+            isAttributeCorrect(attributes.rank) &&
+            isAttributeCorrect(attributes.type) &&
+            isAttributeCorrect(attributes.releaseYear)
 }
+
+private fun isAttributeCorrect(attribute: ResultType) = attribute == ResultType.CORRECT

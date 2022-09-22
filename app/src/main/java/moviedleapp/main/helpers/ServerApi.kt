@@ -6,7 +6,6 @@ import java.io.IOException
 
 class ServerApi {
     companion object {
-
         fun makeGETRequest(client: OkHttpClient, requestUrl: String): String {
             val request = Request.Builder()
                 .url(requestUrl)

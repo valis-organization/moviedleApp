@@ -2,9 +2,7 @@ package moviedleapp.main
 
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import moviedleapp.main.helpers.EndpointUrl
-import moviedleapp.main.helpers.Movie
-import moviedleapp.main.helpers.ServerApi
+import moviedleapp.main.helpers.*
 import moviedleapp.main.helpers.moviedleClassic.MovieWIthComparedAttr
 import okhttp3.OkHttpClient
 
@@ -16,14 +14,14 @@ class Repository {
         private val gson = Gson()
 
         fun getAllMovies(): ArrayList<Movie> {
-            val serverResponse = ServerApi.makeGETRequest(client, EndpointUrl.allMovies())
+            val serverResponse = ServerApi.makeGETRequest(client, allMovies)
             val itemType = object : TypeToken<List<Movie>>() {}.type
             println(itemType)
             return gson.fromJson<List<Movie>>(serverResponse, itemType) as ArrayList<Movie>
         }
 
         fun getRandomMovie(): Movie {
-            val responseFromServer = ServerApi.makeGETRequest(client, EndpointUrl.randomMovieUrl())
+            val responseFromServer = ServerApi.makeGETRequest(client, randomMovieUrl)
 
             val receivedMovieJson: Movie = gson.fromJson(responseFromServer, Movie::class.java)
             println(receivedMovieJson.getTitle())
@@ -32,7 +30,7 @@ class Repository {
 
         fun getChosenMovieResult(movieTitle: String): MovieWIthComparedAttr {
             val responseFromServer =
-                ServerApi.makeGETRequest(client, EndpointUrl.guessMovie(movieTitle))
+                ServerApi.makeGETRequest(client, guessMovie(movieTitle))
 
             return gson.fromJson(responseFromServer, MovieWIthComparedAttr::class.java)
         }

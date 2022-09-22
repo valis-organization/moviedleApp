@@ -13,7 +13,8 @@ class RecyclerViewAdapter(
     private val recyclerViewListener: RecyclerViewListener
 ) : RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder>() {
 
-    class ViewHolder(view: View, recyclerViewListener: RecyclerViewListener) : RecyclerView.ViewHolder(view) {
+    class ViewHolder(view: View, recyclerViewListener: RecyclerViewListener) :
+        RecyclerView.ViewHolder(view) {
         val movieImage: ShapeableImageView = itemView.findViewById(R.id.image)
         val title: TextView = itemView.findViewById(R.id.name)
 
@@ -35,8 +36,6 @@ class RecyclerViewAdapter(
         viewHolder.movieImage.setImageResource(movies[position].getImage()) // TEMP - >   viewHolder.movieImage.setImageResource(movies[position].getImage())
     }
 
-    override fun getItemCount(): Int {
-        return movies.size
-    }
+    override fun getItemCount() = movies.size
 
 }
