@@ -45,6 +45,9 @@ dependencies {
     // https://mvnrepository.com/artifact/org.jetbrains.kotlinx/kotlinx-coroutines-io-jvm
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-io-jvm:0.1.16")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.4.0")
+    // https://mvnrepository.com/artifact/com.squareup.retrofit2/retrofit
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+
 
 
 
