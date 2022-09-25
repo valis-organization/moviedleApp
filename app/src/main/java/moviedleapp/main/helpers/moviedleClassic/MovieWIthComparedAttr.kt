@@ -3,8 +3,8 @@ package moviedleapp.main.helpers.moviedleClassic
 import moviedleapp.main.helpers.Movie
 
 class MovieWIthComparedAttr(
-    private val movie: Movie,
-    private val comparedAttributes: ComparedAttributes
+    private val movie: Movie = Movie(),
+    private val comparedAttributes: ComparedAttributes = ComparedAttributes()
 ) {
 
     fun getMovie(): Movie {

@@ -1,39 +1,44 @@
 package moviedleapp.main
 
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
+import kotlinx.coroutines.*
 import moviedleapp.main.helpers.*
 import moviedleapp.main.helpers.moviedleClassic.MovieWIthComparedAttr
-import okhttp3.OkHttpClient
+import retrofit2.*
 
 
-class Repository {
-    companion object {
+object Repository {
+    private const val baseUrl = "http://109.207.149.50:8080"
+        private val serverApi: ApiInterface = Retrofit.Builder()
+            .baseUrl(baseUrl)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+            .create(ApiInterface::class.java)
 
-        private val client = OkHttpClient()
-        private val gson = Gson()
-
-        fun getAllMovies(): ArrayList<Movie> {
-            val serverResponse = ServerApi.makeGETRequest(client, allMovies)
-            val itemType = object : TypeToken<List<Movie>>() {}.type
-            println(itemType)
-            return gson.fromJson<List<Movie>>(serverResponse, itemType) as ArrayList<Movie>
+        suspend fun getAllMovies(): ArrayList<Movie> {
+            var allMovies = ArrayList<Movie>()
+            CoroutineScope(Dispatchers.IO).launch {
+                allMovies = serverApi.getAllMovies().await()
+            }.join()
+            println("Received all movies from server.")
+            return allMovies
         }
 
-        fun getRandomMovie(): Movie {
-            val responseFromServer = ServerApi.makeGETRequest(client, randomMovieUrl)
+        suspend fun getRandomMovie(): Movie {
+            var movie = Movie()
 
-            val receivedMovieJson: Movie = gson.fromJson(responseFromServer, Movie::class.java)
-            println(receivedMovieJson.getTitle())
-            return receivedMovieJson
+            CoroutineScope(Dispatchers.IO).launch {
+                movie = serverApi.getRandomMovie().await()
+            }.join()
+            println(movie.getTitle())
+            return movie
         }
 
-        fun getChosenMovieResult(movieTitle: String): MovieWIthComparedAttr {
-            val responseFromServer =
-                ServerApi.makeGETRequest(client, guessMovie(movieTitle))
-
-            return gson.fromJson(responseFromServer, MovieWIthComparedAttr::class.java)
+        suspend fun getChosenMovieResult(movieTitle: String): MovieWIthComparedAttr {
+            var result = MovieWIthComparedAttr()
+            CoroutineScope(Dispatchers.IO).launch {
+                result = serverApi.guessMovie(movieTitle).await()
+            }.join()
+            return result
         }
-    }
 }
 

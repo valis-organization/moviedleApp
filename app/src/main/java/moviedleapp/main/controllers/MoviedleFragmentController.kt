@@ -14,7 +14,7 @@ import moviedleapp.main.listView.chosenMovies.ChosenMovieModel
 class MoviedleFragmentController(
     private val moviedleListener: MoviedleListener,
 ) {
-    fun getAllMovies(): ArrayList<Movie> {
+    suspend fun getAllMovies(): ArrayList<Movie> {
         return Repository.getAllMovies()
     }
 
@@ -48,18 +48,19 @@ class MoviedleFragmentController(
         }
         return false
     }
-    fun guessMovie(title: String) {
+
+    suspend fun guessMovie(title: String) {
         handleResult(Repository.getChosenMovieResult(title))
     }
 
     fun removeMovieFromSelectingList(title: String, moviesList: ArrayList<MovieListModel>) {
-        var movieToRemove : MovieListModel? = null
+        var movieToRemove: MovieListModel? = null
         for (movie in moviesList) {
             if (movie.getTitle() == title) {
                 movieToRemove = movie
             }
         }
-        if(movieToRemove!= null){
+        if (movieToRemove != null) {
             moviesList.remove(movieToRemove)
         }
     }
