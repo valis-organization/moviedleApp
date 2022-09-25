@@ -9,7 +9,10 @@ data class Movie(
     private val rank: String = "UNKNOWN",
     private val releaseYear: String = "UNKNOWN"
 ) {
-   fun getTitle(): String {
-        return title
-    }
+    fun getTitle() = title
+    fun getType() = type
+    fun getGenre() = genre
+    fun getDirector() = director
+    fun getRank() = rank
+    fun getReleaseYear() = releaseYear
 }

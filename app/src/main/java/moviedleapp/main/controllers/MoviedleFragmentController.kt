@@ -68,10 +68,10 @@ class MoviedleFragmentController(
     private fun handleResult(result: MovieWIthComparedAttr) {
         val imageTEMP =
             R.drawable.place_holder_nodpi //TEMP, in future change it to image assigned to the movie
-        val type = result.getComparedAttributes().type.toString()
-        val director = result.getComparedAttributes().director.toString()
-        val genre = result.getComparedAttributes().genre.toString()
-        val rank = result.getComparedAttributes().rank.toString()
+        val type = result.getMovie().getType()
+        val director = result.getMovie().getDirector()
+        val genre = result.getMovie().getGenre()
+        val rank = result.getMovie().getRank()
 
         if (isGuessSuccessful(result.getComparedAttributes())) {
             println("Successfully guessed movie: ${result.getMovie().getTitle()}, congratulations!")
@@ -86,7 +86,7 @@ class MoviedleFragmentController(
                         "rank: $rank\n"
             )
         }
-        moviedleListener.showResult(ChosenMovieModel(imageTEMP, type, genre, director, rank))
+        moviedleListener.showResult(ChosenMovieModel(imageTEMP,result))
     }
 
 }
