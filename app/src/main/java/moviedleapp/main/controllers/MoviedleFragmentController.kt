@@ -7,6 +7,7 @@ import moviedleapp.main.fragmentListeners.MoviedleListener
 import moviedleapp.main.helpers.moviedleClassic.ComparedAttributes
 import moviedleapp.main.helpers.moviedleClassic.MovieWIthComparedAttr
 import moviedleapp.main.helpers.moviedleClassic.areAllAttributesCorrect
+import moviedleapp.main.listView.MovieListItem
 import moviedleapp.main.listView.chosenMovies.ChosenMovieModel
 
 
@@ -26,12 +27,12 @@ class MoviedleFragmentController(
 
     fun filterMovies(
         input: String,
-        moviesToChoose: ArrayList<Movie>
-    ): ArrayList<Movie> {
-        val filteredList: ArrayList<Movie> = ArrayList()
+        moviesToChoose: ArrayList<MovieListItem>
+    ): ArrayList<MovieListItem> {
+        val filteredList: ArrayList<MovieListItem> = ArrayList()
         if (input.isNotBlank()) {
             for (movie in moviesToChoose) {
-                if (movie.getTitle().lowercase().startsWith(input)) {
+                if (movie.getMovie().getTitle().lowercase().startsWith(input)) {
                     filteredList.add(movie)
                 }
             }
@@ -39,9 +40,9 @@ class MoviedleFragmentController(
         return filteredList
     }
 
-    fun canMovieBeSelected(input: String, moviesList: ArrayList<Movie>): Boolean {
+    fun canMovieBeSelected(input: String, moviesList: ArrayList<MovieListItem>): Boolean {
         for (movie in moviesList) {
-            if (movie.getTitle() == input) {
+            if (movie.getMovie().getTitle() == input) {
                 return true
             }
         }
@@ -52,10 +53,10 @@ class MoviedleFragmentController(
         handleResult(Repository.getChosenMovieResult(title))
     }
 
-    fun removeMovieFromSelectingList(title: String, moviesList: ArrayList<Movie>) {
-        var movieToRemove: Movie? = null
+    fun removeMovieFromSelectingList(title: String, moviesList: ArrayList<MovieListItem>) {
+        var movieToRemove: MovieListItem? = null
         for (movie in moviesList) {
-            if (movie.getTitle() == title) {
+            if (movie.getMovie().getTitle() == title) {
                 movieToRemove = movie
             }
         }

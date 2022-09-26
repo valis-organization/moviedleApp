@@ -1,5 +1,6 @@
 package moviedleapp.main.fragments
 
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -17,10 +18,13 @@ import moviedleapp.main.R
 import moviedleapp.main.controllers.MoviedleFragmentController
 import moviedleapp.main.fragmentListeners.MoviedleListener
 import moviedleapp.main.helpers.Movie
+import moviedleapp.main.listView.MovieListItem
 import moviedleapp.main.listView.MoviesToChooseViewAdapter
 import moviedleapp.main.listView.MoviesToChooseViewListener
 import moviedleapp.main.listView.chosenMovies.ChosenMovieModel
 import moviedleapp.main.listView.chosenMovies.GuessedMovieAdapter
+import java.io.InputStream
+import java.net.URL
 
 
 class MoviedleFragment : Fragment() {
@@ -72,9 +76,16 @@ class MoviedleFragment : Fragment() {
     }
 
     private fun createMovieListView(allMovies: ArrayList<Movie>) {
-        val moviesToChoose: ArrayList<Movie> = ArrayList()
+        val moviesToChoose: ArrayList<MovieListItem> = ArrayList()
         for (movie in allMovies) {
-            moviesToChoose.add(movie)
+            lifecycleScope.launch(Dispatchers.IO) {
+                val inputStream: InputStream = URL(movie.getImageUrl()).content as InputStream
+                val image = Drawable.createFromStream(inputStream, "srcName")
+                withContext(Dispatchers.Default) {
+                    moviesToChoose.add(MovieListItem(movie, image))
+                    println(moviesToChoose.size)
+                }
+            }
         }
         searchView.clearFocus()
 
@@ -86,15 +97,14 @@ class MoviedleFragment : Fragment() {
                     println("Item name: $title")
                     searchView.setQuery(title, false)
                 }
-            },
-            lifecycleScope
+            }
         )
         setSearchViewListener(searchView, moviesToChoose, adapter)
     }
 
     private fun setSearchViewListener(
         searchView: SearchView,
-        moviesToChoose: ArrayList<Movie>,
+        moviesToChoose: ArrayList<MovieListItem>,
         adapter: MoviesToChooseViewAdapter
     ) {
 

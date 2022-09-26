@@ -15,9 +15,8 @@ import java.io.InputStream
 import java.net.URL
 
 class MoviesToChooseViewAdapter(
-    private var movies: ArrayList<Movie>,
+    private var movies: ArrayList<MovieListItem>,
     private val moviesToChooseViewListener: MoviesToChooseViewListener,
-    private val fragmentScope : LifecycleCoroutineScope
 ) : RecyclerView.Adapter<MoviesToChooseViewAdapter.ViewHolder>() {
 
     class ViewHolder(view: View, moviesToChooseViewListener: MoviesToChooseViewListener) :
@@ -39,19 +38,20 @@ class MoviesToChooseViewAdapter(
     }
 
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
-        viewHolder.title.text = movies[position].getTitle()
-        fragmentScope.launch(Dispatchers.IO){
-            val inputStream: InputStream = URL(movies[position].getImageUrl()).content as InputStream
+        viewHolder.title.text = movies[position].getMovie().getTitle()
+        viewHolder.movieImage.setImageDrawable(movies[position].getImage())
+/*        fragmentScope.launch(Dispatchers.IO){
+            val inputStream: InputStream = URL().content as InputStream
             val d = Drawable.createFromStream(inputStream,"srcName")
             withContext(Dispatchers.Main){
-                viewHolder.movieImage.setImageDrawable(d)
+
             }
-        }
+        }*/
     }
 
     override fun getItemCount() = movies.size
 
-    fun setMovies(filteredMovies : ArrayList<Movie>){
+    fun setMovies(filteredMovies : ArrayList<MovieListItem>){
         movies = filteredMovies
     }
 
