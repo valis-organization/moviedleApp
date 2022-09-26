@@ -1,5 +1,5 @@
 package moviedleapp.main.listView
 
-interface RecyclerViewListener {
+interface MoviesToChooseViewListener {
     fun onItemClick(position: Int, title : String)
 }

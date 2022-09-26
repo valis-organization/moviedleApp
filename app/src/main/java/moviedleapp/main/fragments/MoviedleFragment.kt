@@ -17,11 +17,11 @@ import moviedleapp.main.R
 import moviedleapp.main.controllers.MoviedleFragmentController
 import moviedleapp.main.fragmentListeners.MoviedleListener
 import moviedleapp.main.helpers.Movie
-import moviedleapp.main.listView.MovieListModel
-import moviedleapp.main.listView.RecyclerViewAdapter
-import moviedleapp.main.listView.RecyclerViewListener
+import moviedleapp.main.listView.MoviesToChooseViewAdapter
+import moviedleapp.main.listView.MoviesToChooseViewListener
 import moviedleapp.main.listView.chosenMovies.ChosenMovieModel
 import moviedleapp.main.listView.chosenMovies.GuessedMovieAdapter
+
 
 class MoviedleFragment : Fragment() {
 
@@ -53,7 +53,7 @@ class MoviedleFragment : Fragment() {
             }
 
             override fun onWinning() {
-                lifecycleScope.launch(Dispatchers.Main){
+                lifecycleScope.launch(Dispatchers.Main) {
                     searchView.clearFocus()
                     searchView.isEnabled = false
                     searchView.isSubmitButtonEnabled = false
@@ -72,20 +72,32 @@ class MoviedleFragment : Fragment() {
     }
 
     private fun createMovieListView(allMovies: ArrayList<Movie>) {
-        val imageTEMP =
-            R.drawable.place_holder_nodpi //TEMP, in future change it to image assigned to the movie
-        val moviesToChoose: ArrayList<MovieListModel> = ArrayList()
+        val moviesToChoose: ArrayList<Movie> = ArrayList()
         for (movie in allMovies) {
-            moviesToChoose.add(MovieListModel(movie.getTitle(), imageTEMP))
+            moviesToChoose.add(movie)
         }
         searchView.clearFocus()
-        setSearchViewListener(searchView, moviesToChoose)
+
+        val adapter = MoviesToChooseViewAdapter(
+            moviesToChoose,
+            object : MoviesToChooseViewListener {
+                override fun onItemClick(position: Int, title: String) {
+                    println("Item $position clicked.")
+                    println("Item name: $title")
+                    searchView.setQuery(title, false)
+                }
+            },
+            lifecycleScope
+        )
+        setSearchViewListener(searchView, moviesToChoose, adapter)
     }
 
     private fun setSearchViewListener(
         searchView: SearchView,
-        moviesToChoose: ArrayList<MovieListModel>
+        moviesToChoose: ArrayList<Movie>,
+        adapter: MoviesToChooseViewAdapter
     ) {
+
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
 
@@ -110,19 +122,8 @@ class MoviedleFragment : Fragment() {
                 if (newText != null) {
                     val filteredMovies =
                         controller.filterMovies(newText.lowercase(), moviesToChoose)
-
-                    val recyclerViewListener = object : RecyclerViewListener {
-                        override fun onItemClick(position: Int, title: String) {
-                            println("Item $position clicked.")
-                            println("Item name: $title")
-                            searchView.setQuery(title, false)
-                        }
-                    }
-                    recyclerView.adapter =
-                        RecyclerViewAdapter(
-                            filteredMovies,
-                            recyclerViewListener
-                        )
+                    adapter.setMovies(filteredMovies)
+                    recyclerView.adapter = adapter
                     if (filteredMovies.isEmpty() && newText.isNotBlank()) {
                         showMovieNotFoundNotification()
                     } else if (filteredMovies.isNotEmpty()) {

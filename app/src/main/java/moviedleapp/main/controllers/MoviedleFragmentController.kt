@@ -7,7 +7,6 @@ import moviedleapp.main.fragmentListeners.MoviedleListener
 import moviedleapp.main.helpers.moviedleClassic.ComparedAttributes
 import moviedleapp.main.helpers.moviedleClassic.MovieWIthComparedAttr
 import moviedleapp.main.helpers.moviedleClassic.areAllAttributesCorrect
-import moviedleapp.main.listView.MovieListModel
 import moviedleapp.main.listView.chosenMovies.ChosenMovieModel
 
 
@@ -27,20 +26,20 @@ class MoviedleFragmentController(
 
     fun filterMovies(
         input: String,
-        movieListModelArray: ArrayList<MovieListModel>
-    ): ArrayList<MovieListModel> {
-        val filteredList: ArrayList<MovieListModel> = ArrayList()
+        moviesToChoose: ArrayList<Movie>
+    ): ArrayList<Movie> {
+        val filteredList: ArrayList<Movie> = ArrayList()
         if (input.isNotBlank()) {
-            for (listModel in movieListModelArray) {
-                if (listModel.getTitle().lowercase().startsWith(input)) {
-                    filteredList.add(listModel)
+            for (movie in moviesToChoose) {
+                if (movie.getTitle().lowercase().startsWith(input)) {
+                    filteredList.add(movie)
                 }
             }
         }
         return filteredList
     }
 
-    fun canMovieBeSelected(input: String, moviesList: ArrayList<MovieListModel>): Boolean {
+    fun canMovieBeSelected(input: String, moviesList: ArrayList<Movie>): Boolean {
         for (movie in moviesList) {
             if (movie.getTitle() == input) {
                 return true
@@ -53,8 +52,8 @@ class MoviedleFragmentController(
         handleResult(Repository.getChosenMovieResult(title))
     }
 
-    fun removeMovieFromSelectingList(title: String, moviesList: ArrayList<MovieListModel>) {
-        var movieToRemove: MovieListModel? = null
+    fun removeMovieFromSelectingList(title: String, moviesList: ArrayList<Movie>) {
+        var movieToRemove: Movie? = null
         for (movie in moviesList) {
             if (movie.getTitle() == title) {
                 movieToRemove = movie
