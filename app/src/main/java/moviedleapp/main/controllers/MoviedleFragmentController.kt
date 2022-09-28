@@ -1,5 +1,10 @@
 package moviedleapp.main.controllers
 
+import android.graphics.drawable.Drawable
+import androidx.lifecycle.LifecycleCoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import moviedleapp.main.R
 import moviedleapp.main.Repository
 import moviedleapp.main.helpers.Movie
@@ -9,20 +14,20 @@ import moviedleapp.main.helpers.moviedleClassic.MovieWIthComparedAttr
 import moviedleapp.main.helpers.moviedleClassic.areAllAttributesCorrect
 import moviedleapp.main.listView.MovieListItem
 import moviedleapp.main.listView.chosenMovies.ChosenMovieModel
+import java.io.InputStream
+import java.net.URL
 
 
 class MoviedleFragmentController(
     private val moviedleListener: MoviedleListener,
+    private val fragmentScope: LifecycleCoroutineScope,
 ) {
-    suspend fun getAllMovies(): ArrayList<Movie> {
-        return Repository.getAllMovies()
-    }
 
-    private fun isGuessSuccessful(attributes: ComparedAttributes): Boolean {
-        if (areAllAttributesCorrect(attributes)) {
-            return true
-        }
-        return false
+    private lateinit var allMovies : ArrayList<Movie>
+
+    suspend fun getAllMovies(): ArrayList<Movie> {
+        allMovies = Repository.getAllMovies()
+        return allMovies
     }
 
     fun filterMovies(
@@ -65,6 +70,20 @@ class MoviedleFragmentController(
         }
     }
 
+    fun initMoviesToChooseList(moviesToChoose:ArrayList<MovieListItem>){
+        for (movie in allMovies) {
+            fragmentScope.launch(Dispatchers.IO) {
+                val inputStream: InputStream = URL(movie.getImageUrl()).content as InputStream
+                val image = Drawable.createFromStream(inputStream, "srcName")
+                withContext(Dispatchers.Default) {
+                    moviesToChoose.add(MovieListItem(movie, image))
+                    println(moviesToChoose.size)
+                }
+            }
+        }
+    }
+
+
     private fun handleResult(result: MovieWIthComparedAttr) {
         val imageTEMP =
             R.drawable.place_holder_nodpi //TEMP, in future change it to image assigned to the movie
@@ -86,8 +105,14 @@ class MoviedleFragmentController(
                         "rank: $rank\n"
             )
         }
-        moviedleListener.showResult(ChosenMovieModel(imageTEMP,result))
+        moviedleListener.showResult(ChosenMovieModel(imageTEMP, result))
     }
 
+    private fun isGuessSuccessful(attributes: ComparedAttributes): Boolean {
+        if (areAllAttributesCorrect(attributes)) {
+            return true
+        }
+        return false
+    }
 }
 

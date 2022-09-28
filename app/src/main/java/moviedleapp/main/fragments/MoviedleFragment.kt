@@ -1,6 +1,5 @@
 package moviedleapp.main.fragments
 
-import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -17,14 +16,11 @@ import kotlinx.coroutines.withContext
 import moviedleapp.main.R
 import moviedleapp.main.controllers.MoviedleFragmentController
 import moviedleapp.main.fragmentListeners.MoviedleListener
-import moviedleapp.main.helpers.Movie
 import moviedleapp.main.listView.MovieListItem
 import moviedleapp.main.listView.MoviesToChooseViewAdapter
 import moviedleapp.main.listView.MoviesToChooseViewListener
 import moviedleapp.main.listView.chosenMovies.ChosenMovieModel
 import moviedleapp.main.listView.chosenMovies.GuessedMovieAdapter
-import java.io.InputStream
-import java.net.URL
 
 
 class MoviedleFragment : Fragment() {
@@ -45,7 +41,6 @@ class MoviedleFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        var allMovies: ArrayList<Movie>
         assignViews()
 
         val moviedleListener = object : MoviedleListener {
@@ -65,28 +60,19 @@ class MoviedleFragment : Fragment() {
             }
         }
 
-        controller = MoviedleFragmentController(moviedleListener)
+        controller = MoviedleFragmentController(moviedleListener, lifecycleScope)
         lifecycleScope.launch(Dispatchers.IO) {
-            allMovies = controller.getAllMovies()
+            controller.getAllMovies()
             withContext(Dispatchers.Main) {
-                createMovieListView(allMovies)
+                createMovieListView()
             }
         }
 
     }
 
-    private fun createMovieListView(allMovies: ArrayList<Movie>) {
+    private fun createMovieListView() {
         val moviesToChoose: ArrayList<MovieListItem> = ArrayList()
-        for (movie in allMovies) {
-            lifecycleScope.launch(Dispatchers.IO) {
-                val inputStream: InputStream = URL(movie.getImageUrl()).content as InputStream
-                val image = Drawable.createFromStream(inputStream, "srcName")
-                withContext(Dispatchers.Default) {
-                    moviesToChoose.add(MovieListItem(movie, image))
-                    println(moviesToChoose.size)
-                }
-            }
-        }
+        controller.initMoviesToChooseList(moviesToChoose)
         searchView.clearFocus()
 
         val adapter = MoviesToChooseViewAdapter(
