@@ -1,7 +1,6 @@
 package moviedleapp.main.fragmentListeners
 
-import android.graphics.drawable.Drawable
-import moviedleapp.main.listView.MovieListItem
+import moviedleapp.main.helpers.Movie
 import moviedleapp.main.listView.chosenMovies.ChosenMovieModel
 
 interface MoviedleListener {
@@ -10,5 +9,5 @@ interface MoviedleListener {
 
     fun onWinning(title: String)
 
-    fun getMoviesToChoose() : ArrayList<MovieListItem>
+    fun getMoviesToChoose() : ArrayList<Movie>
 }

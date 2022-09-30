@@ -1,21 +1,17 @@
 package moviedleapp.main.listView
 
-import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.imageview.ShapeableImageView
-import kotlinx.coroutines.*
 import moviedleapp.main.R
+import moviedleapp.main.Repository
 import moviedleapp.main.helpers.Movie
-import java.io.InputStream
-import java.net.URL
 
 class MoviesToChooseViewAdapter(
-    private var movies: ArrayList<MovieListItem>,
+    private var movies: ArrayList<Movie>,
     private val moviesToChooseViewListener: MoviesToChooseViewListener,
 ) : RecyclerView.Adapter<MoviesToChooseViewAdapter.ViewHolder>() {
 
@@ -38,20 +34,15 @@ class MoviesToChooseViewAdapter(
     }
 
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
-        viewHolder.title.text = movies[position].getMovie().getTitle()
-        viewHolder.movieImage.setImageDrawable(movies[position].getImage())
-/*        fragmentScope.launch(Dispatchers.IO){
-            val inputStream: InputStream = URL().content as InputStream
-            val d = Drawable.createFromStream(inputStream,"srcName")
-            withContext(Dispatchers.Main){
+        val movieTitle = movies[position].getTitle()
 
-            }
-        }*/
+        viewHolder.title.text = movieTitle
+        viewHolder.movieImage.setImageDrawable(Repository.getMovieImageByTitle(movieTitle))
     }
 
     override fun getItemCount() = movies.size
 
-    fun setMovies(filteredMovies : ArrayList<MovieListItem>){
+    fun setMovies(filteredMovies: ArrayList<Movie>) {
         movies = filteredMovies
     }
 

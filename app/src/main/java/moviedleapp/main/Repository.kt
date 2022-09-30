@@ -1,44 +1,51 @@
 package moviedleapp.main
 
-import kotlinx.coroutines.*
-import moviedleapp.main.helpers.*
+import android.graphics.drawable.Drawable
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import moviedleapp.main.helpers.Movie
+import moviedleapp.main.helpers.getDrawableByUrl
 import moviedleapp.main.helpers.moviedleClassic.MovieWIthComparedAttr
-import retrofit2.*
-
 
 object Repository {
-    private const val baseUrl = "http://109.207.149.50:8080"
-        private val serverApi: ApiInterface = Retrofit.Builder()
-            .baseUrl(baseUrl)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-            .create(ApiInterface::class.java)
 
-        suspend fun getAllMovies(): ArrayList<Movie> {
-            var allMovies = ArrayList<Movie>()
-            CoroutineScope(Dispatchers.IO).launch {
-                allMovies = serverApi.getAllMovies().await()
-            }.join()
-            println("Received all movies from server.")
-            return allMovies
+    private var allMovies = ArrayList<Movie>()
+    private var moviesImage = HashMap<String, Drawable>()
+    private var repositoryService = RepositoryService()
+
+    suspend fun getAllMovies(): ArrayList<Movie> {
+        if (allMovies.isEmpty()) {
+            allMovies = repositoryService.getAllMovies()
+            initializeMoviesImage()
         }
+        println(allMovies.size)
+        return allMovies
+    }
 
-        suspend fun getRandomMovie(): Movie {
-            var movie = Movie()
 
+
+    suspend fun getRandomMovie() : Movie{
+        return repositoryService.getRandomMovie()
+    }
+
+    fun getMovieImageByTitle(title: String): Drawable? {
+        return moviesImage[title]
+    }
+
+    private fun initializeMoviesImage() {
+        for (movie in allMovies) {
             CoroutineScope(Dispatchers.IO).launch {
-                movie = serverApi.getRandomMovie().await()
-            }.join()
-            println(movie.getTitle())
-            return movie
+                val image = getDrawableByUrl(movie.getImageUrl())
+                withContext(Dispatchers.Default) {
+                    moviesImage[movie.getTitle()] = image
+                }
+            }
         }
+    }
 
-        suspend fun getChosenMovieResult(movieTitle: String): MovieWIthComparedAttr {
-            var result = MovieWIthComparedAttr()
-            CoroutineScope(Dispatchers.IO).launch {
-                result = serverApi.guessMovie(movieTitle).await()
-            }.join()
-            return result
-        }
+    suspend fun getChosenMovieResult(title: String): MovieWIthComparedAttr {
+        return repositoryService.getChosenMovieResult(title)
+    }
 }
-

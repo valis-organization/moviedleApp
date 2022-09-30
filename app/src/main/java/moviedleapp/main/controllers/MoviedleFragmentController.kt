@@ -8,11 +8,9 @@ import kotlinx.coroutines.withContext
 import moviedleapp.main.Repository
 import moviedleapp.main.helpers.Movie
 import moviedleapp.main.fragmentListeners.MoviedleListener
-import moviedleapp.main.helpers.getDrawableByUrl
 import moviedleapp.main.helpers.moviedleClassic.ComparedAttributes
 import moviedleapp.main.helpers.moviedleClassic.MovieWIthComparedAttr
 import moviedleapp.main.helpers.moviedleClassic.areAllAttributesCorrect
-import moviedleapp.main.listView.MovieListItem
 import moviedleapp.main.listView.chosenMovies.ChosenMovieModel
 import java.io.InputStream
 import java.net.URL
@@ -27,17 +25,18 @@ class MoviedleFragmentController(
 
     suspend fun getAllMovies(): ArrayList<Movie> {
         allMovies = Repository.getAllMovies()
+        println(allMovies.size)
         return allMovies
     }
 
     fun filterMovies(
         input: String,
-        moviesToChoose: ArrayList<MovieListItem>
-    ): ArrayList<MovieListItem> {
-        val filteredList: ArrayList<MovieListItem> = ArrayList()
+        moviesToChoose: ArrayList<Movie>
+    ): ArrayList<Movie> {
+        val filteredList: ArrayList<Movie> = ArrayList()
         if (input.isNotBlank()) {
             for (movie in moviesToChoose) {
-                if (movie.getMovie().getTitle().lowercase().startsWith(input)) {
+                if (movie.getTitle().lowercase().startsWith(input)) {
                     filteredList.add(movie)
                 }
             }
@@ -45,13 +44,19 @@ class MoviedleFragmentController(
         return filteredList
     }
 
-    fun canMovieBeSelected(input: String, moviesList: ArrayList<MovieListItem>): Boolean {
+    fun canMovieBeSelected(input: String, moviesList: ArrayList<Movie>): Boolean {
         for (movie in moviesList) {
-            if (movie.getMovie().getTitle() == input) {
+            if (movie.getTitle() == input) {
                 return true
             }
         }
         return false
+    }
+
+    fun initMoviesToChooseList(moviesToChoose: ArrayList<Movie>) {
+        for (movie in allMovies) {
+            moviesToChoose.add(movie)
+        }
     }
 
     fun guessMovie(title: String) {
@@ -60,24 +65,8 @@ class MoviedleFragmentController(
         }
     }
 
-    fun initMoviesToChooseList(moviesToChoose: ArrayList<MovieListItem>) {
-        for (movie in allMovies) {
-            fragmentScope.launch(Dispatchers.IO) {
-                val image = getDrawableByUrl(movie.getImageUrl())
-                withContext(Dispatchers.Default) {
-                    moviesToChoose.add(MovieListItem(movie, image))
-                }
-            }
-        }
-    }
-
     fun getMovieImageByTitle(title: String): Drawable? {
-        for (movie in moviedleListener.getMoviesToChoose()) {
-            if (movie.getMovie().getTitle() == title) {
-                return movie.getImage()
-            }
-        }
-        return null
+      return  Repository.getMovieImageByTitle(title)
     }
 
     private fun handleResult(result: MovieWIthComparedAttr) {
@@ -111,10 +100,10 @@ class MoviedleFragmentController(
         }
     }
 
-    private fun removeMovieFromSelectingList(title: String, moviesList: ArrayList<MovieListItem>) {
-        var movieToRemove: MovieListItem? = null
+    private fun removeMovieFromSelectingList(title: String, moviesList: ArrayList<Movie>) {
+        var movieToRemove : Movie? = null
         for (movie in moviesList) {
-            if (movie.getMovie().getTitle() == title) {
+            if (movie.getTitle() == title) {
                 movieToRemove = movie
             }
         }

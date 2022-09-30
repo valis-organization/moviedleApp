@@ -1,13 +1,11 @@
 package moviedleapp.main.fragments
 
-import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.SearchView
 import android.widget.TextView
-import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -19,7 +17,7 @@ import kotlinx.coroutines.withContext
 import moviedleapp.main.R
 import moviedleapp.main.controllers.MoviedleFragmentController
 import moviedleapp.main.fragmentListeners.MoviedleListener
-import moviedleapp.main.listView.MovieListItem
+import moviedleapp.main.helpers.Movie
 import moviedleapp.main.listView.MoviesToChooseViewAdapter
 import moviedleapp.main.listView.MoviesToChooseViewListener
 import moviedleapp.main.listView.chosenMovies.ChosenMovieModel
@@ -36,7 +34,7 @@ class MoviedleFragment : Fragment() {
     private lateinit var winningTextView: TextView
     private lateinit var winningMovie: ShapeableImageView
     private val chosenMoviesArrayList: ArrayList<ChosenMovieModel> = ArrayList()
-    private val moviesToChoose: ArrayList<MovieListItem> = ArrayList()
+    private val moviesToChoose: ArrayList<Movie> = ArrayList()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -66,7 +64,7 @@ class MoviedleFragment : Fragment() {
                 }
             }
 
-            override fun getMoviesToChoose(): ArrayList<MovieListItem> {
+            override fun getMoviesToChoose(): ArrayList<Movie> {
                 return moviesToChoose
             }
         }
@@ -75,13 +73,13 @@ class MoviedleFragment : Fragment() {
         lifecycleScope.launch(Dispatchers.IO) {
             controller.getAllMovies()
             withContext(Dispatchers.Main) {
+                controller.initMoviesToChooseList(moviesToChoose)
                 createMovieListView()
             }
         }
     }
 
     private fun createMovieListView() {
-        controller.initMoviesToChooseList(moviesToChoose)
         searchView.clearFocus()
 
         val adapter = MoviesToChooseViewAdapter(
@@ -99,7 +97,7 @@ class MoviedleFragment : Fragment() {
 
     private fun setSearchViewListener(
         searchView: SearchView,
-        moviesToChoose: ArrayList<MovieListItem>,
+        moviesToChoose: ArrayList<Movie>,
         adapter: MoviesToChooseViewAdapter
     ) {
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
