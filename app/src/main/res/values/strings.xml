@@ -12,4 +12,5 @@
     <string name="classic_search_movie">Type movie name…</string>
     <string name="place_holder">PLACE_HOLDER</string>
     <string name="movie_not_found"><b> Movie not found</b></string>
+    <string name="won"><b>Congratulations! You won! Guessed movie:  </b></string>
 </resources>

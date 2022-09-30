@@ -1,15 +1,18 @@
 package moviedleapp.main.fragments
 
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.SearchView
 import android.widget.TextView
+import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.imageview.ShapeableImageView
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -30,7 +33,10 @@ class MoviedleFragment : Fragment() {
     private lateinit var searchView: SearchView
     private lateinit var movieNotFoundInformer: TextView
     private lateinit var controller: MoviedleFragmentController
+    private lateinit var winningTextView: TextView
+    private lateinit var winningMovie: ShapeableImageView
     private val chosenMoviesArrayList: ArrayList<ChosenMovieModel> = ArrayList()
+    private val moviesToChoose: ArrayList<MovieListItem> = ArrayList()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -51,12 +57,17 @@ class MoviedleFragment : Fragment() {
                 }
             }
 
-            override fun onWinning() {
+            override fun onWinning(title: String) {
                 lifecycleScope.launch(Dispatchers.Main) {
-                    searchView.clearFocus()
-                    searchView.isEnabled = false
-                    searchView.isSubmitButtonEnabled = false
+                    searchView.visibility = View.INVISIBLE
+                    winningMovie.setImageDrawable(controller.getMovieImageByTitle(title))
+                    winningTextView.visibility = View.VISIBLE
+                    winningMovie.visibility = View.VISIBLE
                 }
+            }
+
+            override fun getMoviesToChoose(): ArrayList<MovieListItem> {
+                return moviesToChoose
             }
         }
 
@@ -67,11 +78,9 @@ class MoviedleFragment : Fragment() {
                 createMovieListView()
             }
         }
-
     }
 
     private fun createMovieListView() {
-        val moviesToChoose: ArrayList<MovieListItem> = ArrayList()
         controller.initMoviesToChooseList(moviesToChoose)
         searchView.clearFocus()
 
@@ -93,7 +102,6 @@ class MoviedleFragment : Fragment() {
         moviesToChoose: ArrayList<MovieListItem>,
         adapter: MoviesToChooseViewAdapter
     ) {
-
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
 
@@ -102,10 +110,7 @@ class MoviedleFragment : Fragment() {
                         moviesToChoose
                     )
                 ) {
-                    lifecycleScope.launch(Dispatchers.IO) {
-                        controller.guessMovie(query)
-                    }
-                    controller.removeMovieFromSelectingList(query, moviesToChoose)
+                    controller.guessMovie(query)
                     searchView.setQuery("", false)
                 } else {
                     showMovieNotFoundNotification()
@@ -141,6 +146,9 @@ class MoviedleFragment : Fragment() {
             LinearLayoutManager(context, LinearLayoutManager.VERTICAL, true)
 
         movieNotFoundInformer = requireView().findViewById(R.id.movie_not_found_view)
+
+        winningMovie = requireView().findViewById(R.id.winning_image)
+        winningTextView = requireView().findViewById(R.id.winning_text_view)
     }
 
     private fun showMovieNotFoundNotification() {

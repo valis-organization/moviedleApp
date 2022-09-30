@@ -9,8 +9,9 @@
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/movie_image"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_height="match_parent"
         android:adjustViewBounds="true"
+        android:maxHeight="100dp"
         android:scaleType="centerCrop"
         android:src="@drawable/place_holder_nodpi"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -20,65 +21,58 @@
         android:id="@+id/title"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:text="@string/place_holder"
+        tools:text="TITLE"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@id/movie_image"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintBottom_toBottomOf="@id/movie_image" />
+        app:layout_constraintRight_toRightOf="parent" />
 
     <TextView
         android:id="@+id/type"
-        android:layout_width="70dp"
-        android:layout_height="70dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="5dp"
-        android:gravity="center"
-        android:text="TYPE"
+        style="@style/MovieAttribute"
+        android:textColor="@color/white"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintRight_toLeftOf="@id/genre"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:background="#996200EE"
+        tools:text="TYPE" />
 
     <TextView
         android:id="@+id/genre"
-        android:layout_width="70dp"
-        android:layout_height="70dp"
-        android:layout_marginStart="5dp"
-        android:layout_marginTop="5dp"
-        android:gravity="center"
-        android:text="GENRE"
+        style="@style/MovieAttribute"
         app:layout_constraintLeft_toRightOf="@id/type"
-        app:layout_constraintTop_toTopOf="@id/movie_image" />
+        app:layout_constraintRight_toLeftOf="@id/director"
+        app:layout_constraintTop_toTopOf="@id/movie_image"
+        tools:background="#996200EE"
+        tools:text="GENRE" />
 
     <TextView
         android:id="@+id/director"
-        android:layout_width="70dp"
-        android:layout_height="70dp"
-        android:layout_marginStart="5dp"
-        android:layout_marginTop="5dp"
-        android:gravity="center"
-        android:text="DIRECT"
+        style="@style/MovieAttribute"
         app:layout_constraintLeft_toRightOf="@id/genre"
-        app:layout_constraintTop_toTopOf="@id/movie_image" />
+        app:layout_constraintRight_toLeftOf="@id/rank"
+        app:layout_constraintTop_toTopOf="@id/movie_image"
+        tools:background="#996200EE"
+        tools:text="DIRECT" />
 
     <TextView
         android:id="@+id/rank"
-        android:layout_width="70dp"
-        android:layout_height="70dp"
-        android:layout_marginStart="5dp"
-        android:layout_marginTop="5dp"
-        android:gravity="center"
-        android:text="RANK"
+        style="@style/MovieAttribute"
+        app:layout_constraintRight_toLeftOf="@id/releaseYear"
         app:layout_constraintLeft_toRightOf="@id/director"
-        app:layout_constraintTop_toTopOf="@id/movie_image" />
+        app:layout_constraintTop_toTopOf="@id/movie_image"
+        tools:background="#996200EE"
+        tools:text="RANK" />
 
     <TextView
         android:id="@+id/releaseYear"
-        android:layout_width="70dp"
-        android:layout_height="70dp"
-        android:layout_marginStart="5dp"
-        android:layout_marginTop="5dp"
-        android:gravity="center"
-        android:text="YEAR"
+        style="@style/MovieAttribute"
+        app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintLeft_toRightOf="@id/rank"
-        app:layout_constraintTop_toTopOf="@id/movie_image" />
+        app:layout_constraintTop_toTopOf="@id/movie_image"
+        tools:background="#996200EE"
+        tools:text="YEAR" />
 
     <View
         android:layout_width="match_parent"

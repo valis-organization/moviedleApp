@@ -7,23 +7,25 @@
     android:layout_height="match_parent"
     tools:context=".fragments.MoviedleFragment">
 
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/nav_home"
-        android:textSize="24sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/movie_image"
+        android:layout_width="300dp"
+        android:layout_height="400dp"
+        android:layout_marginBottom="20dp"
+        app:layout_constraintBottom_toTopOf="@id/text_view_rnd_movie"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        tools:src="@drawable/place_holder_nodpi" />
 
     <TextView
         android:id="@+id/text_view_rnd_movie"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textStyle="bold"
         android:layout_marginBottom="40dp"
-        android:text=""
+        tools:text="Random Movie Title"
         android:textSize="24sp"
         app:layout_constraintBottom_toTopOf="@id/button_rndMovie"
         app:layout_constraintLeft_toLeftOf="parent"

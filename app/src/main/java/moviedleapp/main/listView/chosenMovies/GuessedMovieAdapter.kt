@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.imageview.ShapeableImageView
 import moviedleapp.main.R
@@ -40,7 +41,7 @@ class GuessedMovieAdapter(private val chosenMovies: ArrayList<ChosenMovieModel>)
         val movie = movieWIthComparedAttr.getMovie()
         val comparedAttr = movieWIthComparedAttr.getComparedAttributes()
 
-        viewHolder.movieImage.setImageResource(chosenMovies[position].getImageSource())
+        viewHolder.movieImage.setImageDrawable(chosenMovies[position].getImageSource())
         setAllTexts(viewHolder, movie)
         setAllColours(viewHolder, comparedAttr)
 
@@ -68,16 +69,16 @@ class GuessedMovieAdapter(private val chosenMovies: ArrayList<ChosenMovieModel>)
     private fun determineColour(resultType: ResultType, view: TextView) {
         when (resultType) {
             ResultType.CORRECT -> {
-                view.setBackgroundColor(Color.parseColor("#228C22"))
+                view.setBackgroundColor(ContextCompat.getColor(view.context, R.color.green))
             }
             ResultType.PARTIAL -> {
-                view.setBackgroundColor(Color.parseColor("#F7CF1D"))
+                view.setBackgroundColor(ContextCompat.getColor(view.context, R.color.yellow))
             }
             ResultType.WRONG -> {
-                view.setBackgroundColor(Color.parseColor("#C61A09"))
+                view.setBackgroundColor(ContextCompat.getColor(view.context, R.color.red))
             }
             else -> {
-                view.setBackgroundColor(Color.parseColor("#C61A09"))
+                view.setBackgroundColor(ContextCompat.getColor(view.context, R.color.red))
             }
         }
     }

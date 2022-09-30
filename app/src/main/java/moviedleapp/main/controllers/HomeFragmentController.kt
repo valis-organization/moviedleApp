@@ -1,16 +1,11 @@
 package moviedleapp.main.controllers
 
-import android.widget.Button
-import moviedleapp.main.fragmentListeners.HomeListener
+import moviedleapp.main.Repository
+import moviedleapp.main.helpers.Movie
 
 
-class HomeFragmentController(
-    rndMovieButton: Button,
-    private val responseListener: HomeListener
-) {
-    init {
-        rndMovieButton.setOnClickListener {
-            responseListener.getAndShowRndMovie()
-        }
+class HomeFragmentController {
+    suspend fun getRandomMovie(): Movie {
+        return Repository.getRandomMovie()
     }
 }
