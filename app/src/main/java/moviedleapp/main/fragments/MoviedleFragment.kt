@@ -13,10 +13,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.imageview.ShapeableImageView
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import moviedleapp.main.R
 import moviedleapp.main.controllers.MoviedleFragmentController
-import moviedleapp.main.fragmentListeners.MoviedleListener
+import moviedleapp.main.controllers.MoviedleListener
 import moviedleapp.main.helpers.Logger
 import moviedleapp.main.helpers.Movie
 import moviedleapp.main.helpers.moviedleClassic.MovieWIthComparedAttr

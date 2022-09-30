@@ -6,8 +6,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import moviedleapp.main.helpers.Movie
-import moviedleapp.main.helpers.getDrawableByUrl
 import moviedleapp.main.helpers.moviedleClassic.MovieWIthComparedAttr
+import java.io.InputStream
+import java.net.URL
 
 object Repository {
 
@@ -24,9 +25,7 @@ object Repository {
         return allMovies
     }
 
-
-
-    suspend fun getRandomMovie() : Movie{
+    suspend fun getRandomMovie(): Movie {
         return repositoryService.getRandomMovie()
     }
 
@@ -48,4 +47,7 @@ object Repository {
     suspend fun getChosenMovieResult(title: String): MovieWIthComparedAttr {
         return repositoryService.getChosenMovieResult(title)
     }
+
+    private fun getDrawableByUrl(url: String): Drawable =
+        Drawable.createFromStream(URL(url).content as InputStream, "srcName")
 }

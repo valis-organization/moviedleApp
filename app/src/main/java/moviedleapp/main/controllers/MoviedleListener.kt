@@ -1,4 +1,4 @@
-package moviedleapp.main.fragmentListeners
+package moviedleapp.main.controllers
 
 import moviedleapp.main.helpers.Movie
 import moviedleapp.main.helpers.moviedleClassic.MovieWIthComparedAttr

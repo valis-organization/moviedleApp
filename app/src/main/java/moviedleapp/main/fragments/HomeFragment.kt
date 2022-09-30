@@ -1,6 +1,5 @@
 package moviedleapp.main.fragments
 
-import android.graphics.drawable.Drawable
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -15,9 +14,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import moviedleapp.main.R
 import moviedleapp.main.controllers.HomeFragmentController
-import moviedleapp.main.helpers.getDrawableByUrl
-import java.io.InputStream
-import java.net.URL
 
 class HomeFragment : Fragment() {
 
@@ -38,10 +34,9 @@ class HomeFragment : Fragment() {
         rndMovieButton.setOnClickListener {
             lifecycleScope.launch(Dispatchers.IO){
                 val randomMovie = controller.getRandomMovie()
-                val image = getDrawableByUrl(randomMovie.getImageUrl())
                 withContext(Dispatchers.Main){
                     rndMovieTextView.text = randomMovie.getTitle()
-                    rndMovieImage.setImageDrawable(image)
+                    rndMovieImage.setImageDrawable(controller.getImageByTitle(randomMovie.getTitle()))
                 }
             }
         }

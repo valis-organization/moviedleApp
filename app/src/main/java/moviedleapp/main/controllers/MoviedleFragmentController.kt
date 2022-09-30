@@ -2,19 +2,13 @@ package moviedleapp.main.controllers
 
 import android.graphics.drawable.Drawable
 import androidx.lifecycle.LifecycleCoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import moviedleapp.main.Repository
 import moviedleapp.main.helpers.Movie
-import moviedleapp.main.fragmentListeners.MoviedleListener
 import moviedleapp.main.helpers.Logger
 import moviedleapp.main.helpers.moviedleClassic.ComparedAttributes
 import moviedleapp.main.helpers.moviedleClassic.MovieWIthComparedAttr
 import moviedleapp.main.helpers.moviedleClassic.areAllAttributesCorrect
-import java.io.InputStream
-import java.net.URL
-
 
 class MoviedleFragmentController(
     private val moviedleListener: MoviedleListener,
