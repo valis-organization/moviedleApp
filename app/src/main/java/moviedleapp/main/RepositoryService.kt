@@ -20,7 +20,7 @@ class RepositoryService {
         CoroutineScope(Dispatchers.IO).launch {
             allMovies = serverApi.getAllMovies().await()
         }.join()
-        println("Received all movies from server.")
+        Logger.logReceivedMovies()
         return allMovies
     }
 
@@ -30,7 +30,7 @@ class RepositoryService {
         CoroutineScope(Dispatchers.IO).launch {
             movie = serverApi.getRandomMovie().await()
         }.join()
-        println(movie.getTitle())
+        Logger.logRandomMovie(movie.getTitle())
         return movie
     }
 
@@ -39,6 +39,7 @@ class RepositoryService {
         CoroutineScope(Dispatchers.IO).launch {
             result = serverApi.guessMovie(movieTitle).await()
         }.join()
+        Logger.logReceivedResult()
         return result
     }
 }

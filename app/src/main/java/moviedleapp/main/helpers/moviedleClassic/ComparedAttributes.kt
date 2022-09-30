@@ -2,7 +2,7 @@ package moviedleapp.main.helpers.moviedleClassic
 
 import moviedleapp.main.helpers.ResultType
 
-class ComparedAttributes(
+data class ComparedAttributes(
     var type: ResultType = ResultType.UNKNOWN,
     var genre: ResultType = ResultType.UNKNOWN,
     var director: ResultType = ResultType.UNKNOWN,

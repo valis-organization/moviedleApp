@@ -8,6 +8,7 @@ import kotlinx.coroutines.withContext
 import moviedleapp.main.Repository
 import moviedleapp.main.helpers.Movie
 import moviedleapp.main.fragmentListeners.MoviedleListener
+import moviedleapp.main.helpers.Logger
 import moviedleapp.main.helpers.moviedleClassic.ComparedAttributes
 import moviedleapp.main.helpers.moviedleClassic.MovieWIthComparedAttr
 import moviedleapp.main.helpers.moviedleClassic.areAllAttributesCorrect
@@ -63,23 +64,12 @@ class MoviedleFragmentController(
     private fun handleResult(result: MovieWIthComparedAttr) {
 
         val title = result.getMovie().getTitle()
-        val type = result.getMovie().getType()
-        val director = result.getMovie().getDirector()
-        val genre = result.getMovie().getGenre()
-        val rank = result.getMovie().getRank()
 
         if (isGuessSuccessful(result.getComparedAttributes())) {
-            println("Successfully guessed movie: $title, congratulations!")
+            Logger.logSuccessfulGuessing(result)
             moviedleListener.onWinning(title)
         } else {
-            println(
-                "Failed to guess movie : ( Your movie: $title \n" +
-                        "type: $type\n" +
-                        "director: $director\n" +
-                        "genre: $genre\n" +
-                        "release year: ${result.getComparedAttributes().releaseYear}\n" +
-                        "rank: $rank\n"
-            )
+            Logger.logFailedGuessing(result)
             removeMovieFromSelectingList(title, moviedleListener.getMoviesToChoose())
         }
         moviedleListener.showResult(result)

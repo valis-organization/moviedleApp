@@ -17,6 +17,7 @@ import kotlinx.coroutines.withContext
 import moviedleapp.main.R
 import moviedleapp.main.controllers.MoviedleFragmentController
 import moviedleapp.main.fragmentListeners.MoviedleListener
+import moviedleapp.main.helpers.Logger
 import moviedleapp.main.helpers.Movie
 import moviedleapp.main.helpers.moviedleClassic.MovieWIthComparedAttr
 import moviedleapp.main.listView.MoviesToChooseViewAdapter
@@ -86,8 +87,7 @@ class MoviedleFragment : Fragment() {
             moviesToChoose,
             object : MoviesToChooseViewListener {
                 override fun onItemClick(position: Int, title: String) {
-                    println("Item $position clicked.")
-                    println("Item name: $title")
+                   Logger.logItemClicked(position,title)
                     searchView.setQuery(title, false)
                 }
             }
