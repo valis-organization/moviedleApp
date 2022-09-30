@@ -9,11 +9,13 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.imageview.ShapeableImageView
 import moviedleapp.main.R
+import moviedleapp.main.Repository
 import moviedleapp.main.helpers.Movie
 import moviedleapp.main.helpers.ResultType
 import moviedleapp.main.helpers.moviedleClassic.ComparedAttributes
+import moviedleapp.main.helpers.moviedleClassic.MovieWIthComparedAttr
 
-class GuessedMovieAdapter(private val chosenMovies: ArrayList<ChosenMovieModel>) :
+class GuessedMovieAdapter(private val chosenMovies: ArrayList<MovieWIthComparedAttr>) :
     RecyclerView.Adapter<GuessedMovieAdapter.ViewHolder>() {
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -37,11 +39,11 @@ class GuessedMovieAdapter(private val chosenMovies: ArrayList<ChosenMovieModel>)
     }
 
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
-        val movieWIthComparedAttr = chosenMovies[position].getMovieWIthComparedAttr()
+        val movieWIthComparedAttr = chosenMovies[position]
         val movie = movieWIthComparedAttr.getMovie()
         val comparedAttr = movieWIthComparedAttr.getComparedAttributes()
 
-        viewHolder.movieImage.setImageDrawable(chosenMovies[position].getImageSource())
+        viewHolder.movieImage.setImageDrawable(Repository.getMovieImageByTitle(movie.getTitle()))
         setAllTexts(viewHolder, movie)
         setAllColours(viewHolder, comparedAttr)
 

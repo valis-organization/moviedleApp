@@ -14,6 +14,7 @@
         android:maxHeight="100dp"
         android:scaleType="centerCrop"
         android:src="@drawable/place_holder_nodpi"
+        android:background="@color/black"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 

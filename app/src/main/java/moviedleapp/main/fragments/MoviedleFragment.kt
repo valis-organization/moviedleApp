@@ -18,14 +18,15 @@ import moviedleapp.main.R
 import moviedleapp.main.controllers.MoviedleFragmentController
 import moviedleapp.main.fragmentListeners.MoviedleListener
 import moviedleapp.main.helpers.Movie
+import moviedleapp.main.helpers.moviedleClassic.MovieWIthComparedAttr
 import moviedleapp.main.listView.MoviesToChooseViewAdapter
 import moviedleapp.main.listView.MoviesToChooseViewListener
-import moviedleapp.main.listView.chosenMovies.ChosenMovieModel
 import moviedleapp.main.listView.chosenMovies.GuessedMovieAdapter
 
 
 class MoviedleFragment : Fragment() {
 
+    //VIEWS
     private lateinit var recyclerView: RecyclerView
     private lateinit var chosenMoviesListView: RecyclerView
     private lateinit var searchView: SearchView
@@ -33,7 +34,9 @@ class MoviedleFragment : Fragment() {
     private lateinit var controller: MoviedleFragmentController
     private lateinit var winningTextView: TextView
     private lateinit var winningMovie: ShapeableImageView
-    private val chosenMoviesArrayList: ArrayList<ChosenMovieModel> = ArrayList()
+
+    //LISTS
+    private val chosenMoviesArrayList: ArrayList<MovieWIthComparedAttr> = ArrayList()
     private val moviesToChoose: ArrayList<Movie> = ArrayList()
 
     override fun onCreateView(
@@ -48,7 +51,7 @@ class MoviedleFragment : Fragment() {
         assignViews()
 
         val moviedleListener = object : MoviedleListener {
-            override fun showResult(chosenMovie: ChosenMovieModel) {
+            override fun showResult(chosenMovie: MovieWIthComparedAttr) {
                 chosenMoviesArrayList.add(chosenMovie)
                 lifecycleScope.launch(Dispatchers.Main) {
                     chosenMoviesListView.adapter = GuessedMovieAdapter(chosenMoviesArrayList)
@@ -70,12 +73,9 @@ class MoviedleFragment : Fragment() {
         }
 
         controller = MoviedleFragmentController(moviedleListener, lifecycleScope)
-        lifecycleScope.launch(Dispatchers.IO) {
-            controller.getAllMovies()
-            withContext(Dispatchers.Main) {
-                controller.initMoviesToChooseList(moviesToChoose)
-                createMovieListView()
-            }
+        lifecycleScope.launch {
+            controller.initMoviesToChooseList(moviesToChoose)
+            createMovieListView()
         }
     }
 
