@@ -5,28 +5,61 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import moviedleapp.main.helpers.Logger
 import moviedleapp.main.helpers.Movie
 import moviedleapp.main.helpers.moviedleClassic.MovieWIthComparedAttr
+import retrofit2.GsonConverterFactory
+import retrofit2.Retrofit
 import java.io.InputStream
 import java.net.URL
 
 object Repository {
 
+    private const val baseUrl = "http://109.207.149.50:8080"
+
+    private val serverApi: RepositoryService = Retrofit.Builder()
+        .baseUrl(baseUrl)
+        .addConverterFactory(GsonConverterFactory.create())
+        .build()
+        .create(RepositoryService::class.java)
+
     private var allMovies = ArrayList<Movie>()
     private var moviesImage = HashMap<String, Drawable>()
-    private var repositoryService = RepositoryService()
 
     suspend fun getAllMovies(): ArrayList<Movie> {
         if (allMovies.isEmpty()) {
-            allMovies = repositoryService.getAllMovies()
+            val response = serverApi.getAllMovies()
+
+            if (response.isSuccessful) {
+                Logger.logReceivedMovies()
+                allMovies = response.body()!!
+            } else {
+                throw Exception("Something went wrong")
+            }
             initializeMoviesImage()
         }
-        println(allMovies.size)
         return allMovies
     }
 
     suspend fun getRandomMovie(): Movie {
-        return repositoryService.getRandomMovie()
+        val response = serverApi.getRandomMovie()
+        if (response.isSuccessful) {
+            val movie = response.body()
+            Logger.logRandomMovie(movie!!.getTitle())
+            return movie
+        } else {
+            throw Exception("Something went wrong")
+        }
+    }
+
+    suspend fun getChosenMovieResult(title: String): MovieWIthComparedAttr {
+        val response =  serverApi.guessMovie(title)
+        if(response.isSuccessful){
+            Logger.logReceivedResult()
+            return response.body()!!
+        }else{
+            throw Exception("Something went wrong.")
+        }
     }
 
     fun getMovieImageByTitle(title: String): Drawable? {
@@ -43,11 +76,6 @@ object Repository {
             }
         }
     }
-
-    suspend fun getChosenMovieResult(title: String): MovieWIthComparedAttr {
-        return repositoryService.getChosenMovieResult(title)
-    }
-
     private fun getDrawableByUrl(url: String): Drawable =
         Drawable.createFromStream(URL(url).content as InputStream, "srcName")
 }
