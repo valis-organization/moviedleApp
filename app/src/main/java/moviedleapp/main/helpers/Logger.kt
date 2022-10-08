@@ -1,10 +1,11 @@
 package moviedleapp.main.helpers
 
+import android.util.Log
 import moviedleapp.main.helpers.moviedleClassic.MovieWIthComparedAttr
 
 object Logger {
 
-    fun logReceivedMovies() = println("Received all movies from server.")
+    fun logReceivedMovies() = Log.e("Logowanie","Received all movies from server.")
 
     fun logRandomMovie(title: String) = println("Received random movie from server - $title")
 

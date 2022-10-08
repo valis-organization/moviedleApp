@@ -62,6 +62,16 @@ object Repository {
         }
     }
 
+    suspend fun loginByGoogleToken(tokenId : String){
+        val response = serverApi.loginByToken(tokenId)
+
+        if(response.isSuccessful){
+            print("Logged in successfully")
+        }else{
+            throw Exception("Something went wrong.")
+        }
+    }
+
     fun getMovieImageByTitle(title: String): Drawable? {
         return moviesImage[title]
     }

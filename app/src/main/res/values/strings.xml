@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">MoviedleApp</string>
+    <string name="client_id">747713817851-sknc38jco126c6g11aiqjk5otbh1e28k.apps.googleusercontent.com</string>
     //fragments
     <string name="nav_home">Home</string>
     <string name="nav_moviedle">Moviedle</string>
@@ -13,4 +14,5 @@
     <string name="place_holder">PLACE_HOLDER</string>
     <string name="movie_not_found"><b> Movie not found</b></string>
     <string name="won"><b>Congratulations! You won! Guessed movie:  </b></string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
