@@ -10,6 +10,7 @@ import moviedleapp.main.helpers.Movie
 import moviedleapp.main.helpers.moviedleClassic.MovieWIthComparedAttr
 import retrofit2.GsonConverterFactory
 import retrofit2.Retrofit
+import retrofit2.converter.scalars.ScalarsConverterFactory
 import java.io.InputStream
 import java.net.URL
 
@@ -19,6 +20,7 @@ object Repository {
 
     private val serverApi: RepositoryService = Retrofit.Builder()
         .baseUrl(baseUrl)
+        .addConverterFactory(ScalarsConverterFactory.create())
         .addConverterFactory(GsonConverterFactory.create())
         .build()
         .create(RepositoryService::class.java)

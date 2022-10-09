@@ -50,6 +50,7 @@ dependencies {
     // https://mvnrepository.com/artifact/com.squareup.retrofit2/converter-gson
     implementation("com.squareup.retrofit2:converter-gson:2.0.0-beta3")
     implementation 'com.google.android.gms:play-services-auth:20.3.0'
+    implementation  'com.squareup.retrofit2:converter-scalars:2.1.0'
 
 
 
