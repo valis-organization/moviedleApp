@@ -16,8 +16,8 @@ interface RepositoryService {
     @GET("/randomMovie")
     suspend fun getRandomMovie(): Response<Movie>
 
-    @GET("/games/classic/guess/{movieTitle}")
-    suspend fun guessMovie(@Path("movieTitle") movieTitle: String): Response<MovieWIthComparedAttr>
+    @POST("/games/classic/guess")
+    suspend fun guessMovie(@Body movieTitle: String): Response<MovieWIthComparedAttr>
 
     @POST("/tokenSignIn")
     suspend fun loginByToken(@Body tokenId :String) : Response<Unit>
