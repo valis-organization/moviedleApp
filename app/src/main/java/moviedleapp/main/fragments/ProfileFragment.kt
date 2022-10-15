@@ -2,12 +2,16 @@ package moviedleapp.main.fragments
 
 import android.app.Activity
 import android.content.Intent
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
@@ -21,6 +25,7 @@ import com.google.android.gms.tasks.Task
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import moviedleapp.main.R
 import moviedleapp.main.Repository
 
@@ -29,7 +34,13 @@ class ProfileFragment : Fragment() {
 
     private lateinit var idToken: String
     private val googleTag = "GOOGLE"
-    private lateinit var loginButton : SignInButton
+    private lateinit var loginButton: SignInButton
+    private lateinit var logoutButton: Button
+    private lateinit var profileIcon: ImageView
+    private lateinit var profileName: TextView
+    private lateinit var historyAndFavMoviesView: LinearLayout
+    private lateinit var profileAndAchievementsView: LinearLayout
+
 
     private val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
         .requestEmail()
@@ -55,8 +66,7 @@ class ProfileFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        loginButton = requireView().findViewById(R.id.singInButton)
-        val logoutButton: Button = requireView().findViewById(R.id.signOutButton)
+        assignViews()
 
         if (isSignedIn()) {
             loginButton.visibility = View.INVISIBLE
@@ -71,7 +81,6 @@ class ProfileFragment : Fragment() {
         }
         logoutButton.setOnClickListener {
             signOut()
-            loginButton.visibility = View.VISIBLE
         }
         silentSignIn()
     }
@@ -84,6 +93,16 @@ class ProfileFragment : Fragment() {
             lifecycleScope.launch(Dispatchers.Main) {
                 Repository.loginByGoogleToken(idToken)
             }
+            var image: Drawable
+            profileName.text = account.givenName
+            CoroutineScope(Dispatchers.IO).launch {
+                image = Repository.getDrawableByUrl(account.photoUrl.toString())
+                withContext(Dispatchers.Main) {
+                    profileIcon.setImageDrawable(image)
+                    handleViewsOnLogin()
+                }
+            }
+
         } catch (e: ApiException) {
             Log.w(googleTag, "handleSignInResult:error", e)
         }
@@ -94,6 +113,7 @@ class ProfileFragment : Fragment() {
             .addOnCompleteListener(requireActivity()) {
                 Log.e("Google", "Successfully logged out")
             }
+        handleViewsOnLogout()
     }
 
     private fun isSignedIn(): Boolean {
@@ -104,10 +124,38 @@ class ProfileFragment : Fragment() {
         val signInIntent: Intent = mGoogleSignInClient.signInIntent
         checkPermission.launch(signInIntent)
     }
-    private fun silentSignIn(){
+
+    private fun silentSignIn() {
         mGoogleSignInClient.silentSignIn()
             .addOnCompleteListener(
                 requireActivity()
             ) { task -> handleSignInResult(task) }
+    }
+
+    private fun assignViews() {
+        loginButton = requireView().findViewById(R.id.singInButton)
+        logoutButton = requireView().findViewById(R.id.signOutButton)
+        profileIcon = requireView().findViewById(R.id.profile_image)
+        profileName = requireView().findViewById(R.id.profile_name)
+        historyAndFavMoviesView = requireView().findViewById(R.id.history_fav_view)
+        profileAndAchievementsView = requireView().findViewById(R.id.profile_and_achievements_view)
+    }
+
+    private fun handleViewsOnLogin() {
+        profileIcon.visibility = View.VISIBLE
+        profileName.visibility = View.VISIBLE
+        historyAndFavMoviesView.visibility = View.VISIBLE
+        profileAndAchievementsView.visibility = View.VISIBLE
+        logoutButton.visibility = View.VISIBLE
+    }
+
+    private fun handleViewsOnLogout() {
+        loginButton.visibility = View.VISIBLE
+        logoutButton.visibility = View.INVISIBLE
+        profileIcon.visibility = View.INVISIBLE
+        profileName.visibility = View.INVISIBLE
+        historyAndFavMoviesView.visibility = View.INVISIBLE
+        profileAndAchievementsView.visibility = View.INVISIBLE
+        logoutButton.visibility = View.INVISIBLE
     }
 }

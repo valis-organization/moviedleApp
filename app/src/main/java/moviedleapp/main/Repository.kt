@@ -1,6 +1,7 @@
 package moviedleapp.main
 
 import android.graphics.drawable.Drawable
+import android.util.Log
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -14,10 +15,10 @@ import retrofit2.converter.scalars.ScalarsConverterFactory
 import java.io.InputStream
 import java.net.URL
 
+
 object Repository {
 
     private const val baseUrl = "http://109.207.149.50:8080"
-
     private val serverApi: RepositoryService = Retrofit.Builder()
         .baseUrl(baseUrl)
         .addConverterFactory(ScalarsConverterFactory.create())
@@ -55,21 +56,21 @@ object Repository {
     }
 
     suspend fun getChosenMovieResult(title: String): MovieWIthComparedAttr {
-        val response =  serverApi.guessMovie(title)
-        if(response.isSuccessful){
+        val response = serverApi.guessMovie(title)
+        if (response.isSuccessful) {
             Logger.logReceivedResult()
             return response.body()!!
-        }else{
+        } else {
             throw Exception("Something went wrong.")
         }
     }
 
-    suspend fun loginByGoogleToken(tokenId : String){
+    suspend fun loginByGoogleToken(tokenId: String) {
         val response = serverApi.loginByToken(tokenId)
 
-        if(response.isSuccessful){
-            print("Logged in successfully")
-        }else{
+        if (response.isSuccessful) {
+            Log.e("RETROFIT","Logged in successfully")
+        } else {
             throw Exception("Something went wrong.")
         }
     }
@@ -77,6 +78,9 @@ object Repository {
     fun getMovieImageByTitle(title: String): Drawable? {
         return moviesImage[title]
     }
+
+    fun getDrawableByUrl(url: String): Drawable =
+        Drawable.createFromStream(URL(url).content as InputStream, "srcName")
 
     private fun initializeMoviesImage() {
         for (movie in allMovies) {
@@ -88,6 +92,5 @@ object Repository {
             }
         }
     }
-    private fun getDrawableByUrl(url: String): Drawable =
-        Drawable.createFromStream(URL(url).content as InputStream, "srcName")
+
 }
