@@ -15,4 +15,9 @@
     <string name="movie_not_found"><b> Movie not found</b></string>
     <string name="won"><b>Congratulations! You won! Guessed movie:  </b></string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="match_history">Match History</string>
+    <string name="favourite_movies">Favourite Movies</string>
+    <string name="achievements">Achievements</string>
+    <string name="profile_info">Profile Info</string>
+    <string name="sign_out">Sign out</string>
 </resources>

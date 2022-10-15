@@ -4,56 +4,50 @@ import android.app.Activity
 import android.content.Intent
 import android.graphics.drawable.Drawable
 import android.os.Bundle
-import android.util.Log
+
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.TextView
+import android.widget.*
+import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.cardview.widget.CardView
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.lifecycleScope
+import androidx.fragment.app.FragmentActivity
 import com.google.android.gms.auth.api.signin.GoogleSignIn
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount
-import com.google.android.gms.auth.api.signin.GoogleSignInClient
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.SignInButton
-import com.google.android.gms.common.api.ApiException
-import com.google.android.gms.tasks.Task
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import moviedleapp.main.R
-import moviedleapp.main.Repository
+import moviedleapp.main.controllers.ProfileFragmentController
+import moviedleapp.main.controllers.ProfileListener
 
 
 class ProfileFragment : Fragment() {
 
-    private lateinit var idToken: String
-    private val googleTag = "GOOGLE"
+    //VIEWS
+    //login
     private lateinit var loginButton: SignInButton
     private lateinit var logoutButton: Button
+    //profile
     private lateinit var profileIcon: ImageView
     private lateinit var profileName: TextView
+    //card views
     private lateinit var historyAndFavMoviesView: LinearLayout
     private lateinit var profileAndAchievementsView: LinearLayout
+    private lateinit var matchHistory: CardView
+    private lateinit var favMovies: CardView
+    private lateinit var profileInfo: CardView
+    private lateinit var achievements: CardView
+    //controller
+    private lateinit var controller: ProfileFragmentController
 
-
-    private val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-        .requestEmail()
-        .requestIdToken("747713817851-sknc38jco126c6g11aiqjk5otbh1e28k.apps.googleusercontent.com")
-        .build()
-    private lateinit var mGoogleSignInClient: GoogleSignInClient
-
-    private val checkPermission =
+    private val googleLogInLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == Activity.RESULT_OK) {
-                Log.i(googleTag, "Successfully logged in")
-                silentSignIn()
-                loginButton.visibility = View.INVISIBLE
+                val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
+                controller.handleSignInResult(task)
             }
         }
 
@@ -61,75 +55,41 @@ class ProfileFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_profile_login, container, false)
+        return inflater.inflate(R.layout.fragment_profile, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         assignViews()
+        setCardViewOnClickListeners()
+        controller = ProfileFragmentController(
+            object : ProfileListener {
+                override fun hideLoginButton() {
+                    loginButton.visibility = View.INVISIBLE
+                }
 
-        if (isSignedIn()) {
-            loginButton.visibility = View.INVISIBLE
-        }
-
-        mGoogleSignInClient = GoogleSignIn.getClient(requireActivity(), gso)
-        loginButton.setOnClickListener {
-            CoroutineScope(Dispatchers.Default).launch {
-                singIn()
-            }
-
-        }
-        logoutButton.setOnClickListener {
-            signOut()
-        }
-        silentSignIn()
-    }
-
-    private fun handleSignInResult(completedTask: Task<GoogleSignInAccount>) {
-        try {
-            val account: GoogleSignInAccount = completedTask.getResult(ApiException::class.java)
-            idToken = account.idToken.toString()
-            Log.i(googleTag, "id token")
-            lifecycleScope.launch(Dispatchers.Main) {
-                Repository.loginByGoogleToken(idToken)
-            }
-            var image: Drawable
-            profileName.text = account.givenName
-            CoroutineScope(Dispatchers.IO).launch {
-                image = Repository.getDrawableByUrl(account.photoUrl.toString())
-                withContext(Dispatchers.Main) {
+                override fun onSignIn(image: Drawable) {
                     profileIcon.setImageDrawable(image)
                     handleViewsOnLogin()
                 }
-            }
 
-        } catch (e: ApiException) {
-            Log.w(googleTag, "handleSignInResult:error", e)
-        }
-    }
+                override fun getFragmentActivity(): FragmentActivity {
+                    return requireActivity()
+                }
 
-    private fun signOut() {
-        mGoogleSignInClient.signOut()
-            .addOnCompleteListener(requireActivity()) {
-                Log.e("Google", "Successfully logged out")
-            }
-        handleViewsOnLogout()
-    }
+                override fun getActivityResultLauncher(): ActivityResultLauncher<Intent> {
+                    return registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {}
+                }
 
-    private fun isSignedIn(): Boolean {
-        return GoogleSignIn.getLastSignedInAccount(requireContext()) != null
-    }
+                override fun onLogout() {
+                    handleViewsOnLogout()
+                }
+            },
+            googleLogInLauncher
+        )
 
-    private fun singIn() {
-        val signInIntent: Intent = mGoogleSignInClient.signInIntent
-        checkPermission.launch(signInIntent)
-    }
-
-    private fun silentSignIn() {
-        mGoogleSignInClient.silentSignIn()
-            .addOnCompleteListener(
-                requireActivity()
-            ) { task -> handleSignInResult(task) }
+        setButtonsListeners()
+        controller.silentSignIn()
     }
 
     private fun assignViews() {
@@ -139,6 +99,25 @@ class ProfileFragment : Fragment() {
         profileName = requireView().findViewById(R.id.profile_name)
         historyAndFavMoviesView = requireView().findViewById(R.id.history_fav_view)
         profileAndAchievementsView = requireView().findViewById(R.id.profile_and_achievements_view)
+        matchHistory = requireView().findViewById(R.id.match_history)
+        favMovies = requireView().findViewById(R.id.fav_movies)
+        achievements = requireView().findViewById(R.id.achievements)
+        profileInfo = requireView().findViewById(R.id.profile_info)
+    }
+
+    private fun setCardViewOnClickListeners() {
+        matchHistory.setOnClickListener {
+            Toast.makeText(this.requireContext(), "Coming soon!", Toast.LENGTH_SHORT).show()
+        }
+        favMovies.setOnClickListener {
+            Toast.makeText(this.requireContext(), "Coming soon!", Toast.LENGTH_SHORT).show()
+        }
+        achievements.setOnClickListener {
+            Toast.makeText(this.requireContext(), "Coming soon!", Toast.LENGTH_SHORT).show()
+        }
+        profileInfo.setOnClickListener {
+            Toast.makeText(this.requireContext(), "Coming soon!", Toast.LENGTH_SHORT).show()
+        }
     }
 
     private fun handleViewsOnLogin() {
@@ -157,5 +136,16 @@ class ProfileFragment : Fragment() {
         historyAndFavMoviesView.visibility = View.INVISIBLE
         profileAndAchievementsView.visibility = View.INVISIBLE
         logoutButton.visibility = View.INVISIBLE
+    }
+
+    private fun setButtonsListeners() {
+        loginButton.setOnClickListener {
+            CoroutineScope(Dispatchers.Default).launch {
+                controller.singIn()
+            }
+        }
+        logoutButton.setOnClickListener {
+            controller.signOut()
+        }
     }
 }

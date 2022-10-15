@@ -19,5 +19,5 @@
         android:id="@+id/profileFragment"
         android:name="moviedleapp.main.fragments.ProfileFragment"
         android:label="fragment_blank3"
-        tools:layout="@layout/fragment_profile_login" />
+        tools:layout="@layout/fragment_profile" />
 </navigation>
