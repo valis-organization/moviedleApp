@@ -8,7 +8,7 @@ import androidx.fragment.app.FragmentActivity
 interface ProfileListener {
     fun hideLoginButton()
 
-    fun onSignIn(image : Drawable)
+    fun onSignIn(image : Drawable,profileName :String)
 
     fun getFragmentActivity() : FragmentActivity
 

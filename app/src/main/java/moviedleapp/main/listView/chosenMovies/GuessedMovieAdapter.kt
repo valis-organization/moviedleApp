@@ -39,10 +39,10 @@ class GuessedMovieAdapter(private val chosenMovies: ArrayList<MovieWIthComparedA
 
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
         val movieWIthComparedAttr = chosenMovies[position]
-        val movie = movieWIthComparedAttr.getMovie()
-        val comparedAttr = movieWIthComparedAttr.getComparedAttributes()
+        val movie = movieWIthComparedAttr.movie
+        val comparedAttr = movieWIthComparedAttr.comparedAttributes
 
-        viewHolder.movieImage.setImageDrawable(Repository.getMovieImageByTitle(movie.getTitle()))
+        viewHolder.movieImage.setImageDrawable(Repository.getMovieImageByTitle(movie.title))
         setAllTexts(viewHolder, movie)
         setAllColours(viewHolder, comparedAttr)
 
@@ -51,12 +51,12 @@ class GuessedMovieAdapter(private val chosenMovies: ArrayList<MovieWIthComparedA
     override fun getItemCount() = chosenMovies.size
 
     private fun setAllTexts(viewHolder: ViewHolder, movie: Movie) {
-        viewHolder.title.text = movie.getTitle()
-        viewHolder.type.text = movie.getType()
-        viewHolder.genre.text = movie.getGenre()
-        viewHolder.director.text = movie.getDirector()
-        viewHolder.rank.text = movie.getRank()
-        viewHolder.release.text = movie.getReleaseYear()
+        viewHolder.title.text = movie.title
+        viewHolder.type.text = movie.type
+        viewHolder.genre.text = movie.genre
+        viewHolder.director.text = movie.director
+        viewHolder.rank.text = movie.rank
+        viewHolder.release.text = movie.releaseYear
     }
 
     private fun setAllColours(viewHolder: ViewHolder, attributes: ComparedAttributes) {

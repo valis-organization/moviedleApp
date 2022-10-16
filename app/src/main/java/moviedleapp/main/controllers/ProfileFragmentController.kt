@@ -67,7 +67,7 @@ class ProfileFragmentController(
             CoroutineScope(Dispatchers.IO).launch {
                 image = Repository.getDrawableByUrl(account.photoUrl.toString())
                 withContext(Dispatchers.Main) {
-                    profileListener.onSignIn(image)
+                    profileListener.onSignIn(image,account.givenName.toString())
                 }
             }
 

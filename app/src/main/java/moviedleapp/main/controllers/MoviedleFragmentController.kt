@@ -12,8 +12,12 @@ import moviedleapp.main.helpers.moviedleClassic.areAllAttributesCorrect
 
 class MoviedleFragmentController(
     private val moviedleListener: MoviedleListener,
-    private val fragmentScope: LifecycleCoroutineScope,
+    private val fragmentScope: LifecycleCoroutineScope
 ) {
+    private val good: String = "\uD83D\uDFE9"
+    private val bad : String = "\uD83D\uDFE5"
+    private val attempts: ArrayList<ComparedAttributes> = ArrayList()
+
 
     fun filterMovies(
         input: String,
@@ -22,7 +26,7 @@ class MoviedleFragmentController(
         val filteredList: ArrayList<Movie> = ArrayList()
         if (input.isNotBlank()) {
             for (movie in moviesToChoose) {
-                if (movie.getTitle().lowercase().startsWith(input)) {
+                if (movie.title.lowercase().startsWith(input)) {
                     filteredList.add(movie)
                 }
             }
@@ -32,7 +36,7 @@ class MoviedleFragmentController(
 
     fun canMovieBeSelected(input: String, moviesList: ArrayList<Movie>): Boolean {
         for (movie in moviesList) {
-            if (movie.getTitle() == input) {
+            if (movie.title == input) {
                 return true
             }
         }
@@ -56,10 +60,10 @@ class MoviedleFragmentController(
     }
 
     private fun handleResult(result: MovieWIthComparedAttr) {
+        val title = result.movie.title
+        attempts.add(result.comparedAttributes)
 
-        val title = result.getMovie().getTitle()
-
-        if (isGuessSuccessful(result.getComparedAttributes())) {
+        if (isGuessSuccessful(result.comparedAttributes)) {
             Logger.logSuccessfulGuessing(result)
             moviedleListener.onWinning(title)
         } else {
@@ -74,7 +78,7 @@ class MoviedleFragmentController(
     private fun removeMovieFromSelectingList(title: String, moviesList: ArrayList<Movie>) {
         var movieToRemove: Movie? = null
         for (movie in moviesList) {
-            if (movie.getTitle() == title) {
+            if (movie.title == title) {
                 movieToRemove = movie
             }
         }

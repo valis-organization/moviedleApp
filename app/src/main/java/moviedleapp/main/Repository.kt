@@ -48,7 +48,7 @@ object Repository {
         val response = serverApi.getRandomMovie()
         if (response.isSuccessful) {
             val movie = response.body()
-            Logger.logRandomMovie(movie!!.getTitle())
+            Logger.logRandomMovie(movie!!.title)
             return movie
         } else {
             throw Exception("Something went wrong")
@@ -85,9 +85,9 @@ object Repository {
     private fun initializeMoviesImage() {
         for (movie in allMovies) {
             CoroutineScope(Dispatchers.IO).launch {
-                val image = getDrawableByUrl(movie.getImageUrl())
+                val image = getDrawableByUrl(movie.imageUrl)
                 withContext(Dispatchers.Default) {
-                    moviesImage[movie.getTitle()] = image
+                    moviesImage[movie.title] = image
                 }
             }
         }

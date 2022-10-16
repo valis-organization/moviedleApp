@@ -35,8 +35,8 @@ class HomeFragment : Fragment() {
             lifecycleScope.launch(Dispatchers.IO){
                 val randomMovie = controller.getRandomMovie()
                 withContext(Dispatchers.Main){
-                    rndMovieTextView.text = randomMovie.getTitle()
-                    rndMovieImage.setImageDrawable(controller.getImageByTitle(randomMovie.getTitle()))
+                    rndMovieTextView.text = randomMovie.title
+                    rndMovieImage.setImageDrawable(controller.getImageByTitle(randomMovie.title))
                 }
             }
         }

@@ -34,7 +34,7 @@ class MoviesToChooseViewAdapter(
     }
 
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
-        val movieTitle = movies[position].getTitle()
+        val movieTitle = movies[position].title
 
         viewHolder.title.text = movieTitle
         viewHolder.movieImage.setImageDrawable(Repository.getMovieImageByTitle(movieTitle))

@@ -1,20 +1,12 @@
 package moviedleapp.main.helpers
 
 data class Movie(
-    private val id: Int = 1,
-    private val title: String = "UNKNOWN",
-    private val imageUrl: String = "UNKNOWN",
-    private val type: String = "UNKNOWN",
-    private val genre: String = "UNKNOWN",
-    private val director: String = "UNKNOWN",
-    private val rank: String = "UNKNOWN",
-    private val releaseYear: String = "UNKNOWN"
-) {
-    fun getTitle() = title
-    fun getImageUrl() = imageUrl
-    fun getType() = type
-    fun getGenre() = genre
-    fun getDirector() = director
-    fun getRank() = rank
-    fun getReleaseYear() = releaseYear
-}
+    val id: Int = 1,
+    val title: String = "UNKNOWN",
+    val imageUrl: String = "UNKNOWN",
+     val type: String = "UNKNOWN",
+    val genre: String = "UNKNOWN",
+    val director: String = "UNKNOWN",
+    val rank: String = "UNKNOWN",
+    val releaseYear: String = "UNKNOWN"
+)

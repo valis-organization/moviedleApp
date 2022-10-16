@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.SearchView
 import android.widget.TextView
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -50,29 +51,31 @@ class MoviedleFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         assignViews()
 
-        val moviedleListener = object : MoviedleListener {
-            override fun showResult(chosenMovie: MovieWIthComparedAttr) {
-                chosenMoviesArrayList.add(chosenMovie)
-                lifecycleScope.launch(Dispatchers.Main) {
-                    chosenMoviesListView.adapter = GuessedMovieAdapter(chosenMoviesArrayList)
+        controller = MoviedleFragmentController(
+            object : MoviedleListener {
+                override fun showResult(chosenMovie: MovieWIthComparedAttr) {
+                    chosenMoviesArrayList.add(chosenMovie)
+                    lifecycleScope.launch(Dispatchers.Main) {
+                        chosenMoviesListView.adapter = GuessedMovieAdapter(chosenMoviesArrayList)
+                    }
                 }
-            }
 
-            override fun onWinning(title: String) {
-                lifecycleScope.launch(Dispatchers.Main) {
-                    searchView.visibility = View.INVISIBLE
-                    winningMovie.setImageDrawable(controller.getMovieImageByTitle(title))
-                    winningTextView.visibility = View.VISIBLE
-                    winningMovie.visibility = View.VISIBLE
+                override fun onWinning(title: String) {
+                    lifecycleScope.launch(Dispatchers.Main) {
+                        searchView.visibility = View.INVISIBLE
+                        winningMovie.setImageDrawable(controller.getMovieImageByTitle(title))
+                        winningTextView.visibility = View.VISIBLE
+                        winningMovie.visibility = View.VISIBLE
+                    }
                 }
-            }
 
-            override fun getMoviesToChoose(): ArrayList<Movie> {
-                return moviesToChoose
-            }
-        }
+                override fun getMoviesToChoose(): ArrayList<Movie> {
+                    return moviesToChoose
+                }
+            },
+            lifecycleScope
+        )
 
-        controller = MoviedleFragmentController(moviedleListener, lifecycleScope)
         lifecycleScope.launch {
             controller.initMoviesToChooseList(moviesToChoose)
             createMovieListView()
@@ -86,17 +89,15 @@ class MoviedleFragment : Fragment() {
             moviesToChoose,
             object : MoviesToChooseViewListener {
                 override fun onItemClick(position: Int, title: String) {
-                   Logger.logItemClicked(position,title)
+                    Logger.logItemClicked(position, title)
                     searchView.setQuery(title, false)
                 }
             }
         )
-        setSearchViewListener(searchView, moviesToChoose, adapter)
+        setSearchViewListener( adapter)
     }
 
     private fun setSearchViewListener(
-        searchView: SearchView,
-        moviesToChoose: ArrayList<Movie>,
         adapter: MoviesToChooseViewAdapter
     ) {
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
@@ -137,23 +138,19 @@ class MoviedleFragment : Fragment() {
         searchView = requireView().findViewById(R.id.search_view)
         recyclerView = requireView().findViewById(R.id.recycler_view)
         recyclerView.layoutManager = LinearLayoutManager(activity)
-
         chosenMoviesListView = requireView().findViewById(R.id.guessed_movies)
-        chosenMoviesListView.layoutManager =
-            LinearLayoutManager(context, LinearLayoutManager.VERTICAL, true)
-
+        chosenMoviesListView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, true)
         movieNotFoundInformer = requireView().findViewById(R.id.movie_not_found_view)
-
         winningMovie = requireView().findViewById(R.id.winning_image)
         winningTextView = requireView().findViewById(R.id.winning_text_view)
     }
 
     private fun showMovieNotFoundNotification() {
-        movieNotFoundInformer.visibility = View.VISIBLE
+        movieNotFoundInformer.isVisible = false
     }
 
     private fun hideMovieNotFoundNotification() {
-        movieNotFoundInformer.visibility = View.INVISIBLE
+        movieNotFoundInformer.isVisible = false
     }
 
 }

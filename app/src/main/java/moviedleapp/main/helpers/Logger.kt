@@ -16,13 +16,13 @@ object Logger {
 
     fun logFailedGuessing(result : MovieWIthComparedAttr){
         println("Failed to guess movie. \n"+
-                "Chosen movie - ${result.getMovie()} \n" +
-                "Compared attributes: ${result.getComparedAttributes()} ")
+                "Chosen movie - ${result.movie} \n" +
+                "Compared attributes: ${result.comparedAttributes} ")
     }
 
     fun logSuccessfulGuessing(result: MovieWIthComparedAttr){
         println("Successfully guessed correct movie. \n" +
-                "Chosen movie - ${result.getMovie()} \n" +
-                "Compared attributes: ${result.getComparedAttributes()} ")
+                "Chosen movie - ${result.movie} \n" +
+                "Compared attributes: ${result.comparedAttributes} ")
     }
 }

@@ -68,8 +68,9 @@ class ProfileFragment : Fragment() {
                     loginButton.visibility = View.INVISIBLE
                 }
 
-                override fun onSignIn(image: Drawable) {
+                override fun onSignIn(image: Drawable,name :String ) {
                     profileIcon.setImageDrawable(image)
+                    profileName.text = name
                     handleViewsOnLogin()
                 }
 
