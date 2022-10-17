@@ -77,9 +77,16 @@ class MoviedleFragment : Fragment() {
         )
 
         lifecycleScope.launch {
-            controller.initMoviesToChooseList(moviesToChoose)
+            if (moviesToChoose.isEmpty()) {
+                controller.initMoviesToChooseList(moviesToChoose)
+            }
             createMovieListView()
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        chosenMoviesListView.adapter = GuessedMovieAdapter(chosenMoviesArrayList)
     }
 
     private fun createMovieListView() {
@@ -94,7 +101,7 @@ class MoviedleFragment : Fragment() {
                 }
             }
         )
-        setSearchViewListener( adapter)
+        setSearchViewListener(adapter)
     }
 
     private fun setSearchViewListener(
@@ -139,7 +146,8 @@ class MoviedleFragment : Fragment() {
         recyclerView = requireView().findViewById(R.id.recycler_view)
         recyclerView.layoutManager = LinearLayoutManager(activity)
         chosenMoviesListView = requireView().findViewById(R.id.guessed_movies)
-        chosenMoviesListView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, true)
+        chosenMoviesListView.layoutManager =
+            LinearLayoutManager(context, LinearLayoutManager.VERTICAL, true)
         movieNotFoundInformer = requireView().findViewById(R.id.movie_not_found_view)
         winningMovie = requireView().findViewById(R.id.winning_image)
         winningTextView = requireView().findViewById(R.id.winning_text_view)

@@ -71,8 +71,6 @@ class MoviedleFragmentController(
             removeMovieFromSelectingList(title, moviedleListener.getMoviesToChoose())
         }
         moviedleListener.showResult(result)
-
-
     }
 
     private fun removeMovieFromSelectingList(title: String, moviesList: ArrayList<Movie>) {
