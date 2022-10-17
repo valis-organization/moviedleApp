@@ -1,4 +1,4 @@
-package moviedleapp.main
+package moviedleapp.main.network
 
 import moviedleapp.main.helpers.Movie
 import moviedleapp.main.helpers.moviedleClassic.MovieWIthComparedAttr

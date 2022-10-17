@@ -3,7 +3,7 @@ package moviedleapp.main.controllers
 import android.graphics.drawable.Drawable
 import androidx.lifecycle.LifecycleCoroutineScope
 import kotlinx.coroutines.launch
-import moviedleapp.main.Repository
+import moviedleapp.main.network.Repository
 import moviedleapp.main.helpers.Movie
 import moviedleapp.main.helpers.Logger
 import moviedleapp.main.helpers.moviedleClassic.ComparedAttributes

@@ -7,7 +7,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.imageview.ShapeableImageView
 import moviedleapp.main.R
-import moviedleapp.main.Repository
+import moviedleapp.main.network.Repository
 import moviedleapp.main.helpers.Movie
 
 class MoviesToChooseViewAdapter(

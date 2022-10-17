@@ -1,4 +1,4 @@
-package moviedleapp.main
+package moviedleapp.main.network
 
 import android.graphics.drawable.Drawable
 import android.util.Log
@@ -30,18 +30,18 @@ object Repository {
     private var moviesImage = HashMap<String, Drawable>()
 
     suspend fun getAllMovies(): ArrayList<Movie> {
-        if (allMovies.isEmpty()) {
-            val response = serverApi.getAllMovies()
+            if (allMovies.isEmpty()) {
+                val response = serverApi.getAllMovies()
 
-            if (response.isSuccessful) {
-                Logger.logReceivedMovies()
-                allMovies = response.body()!!
-            } else {
-                throw Exception("Something went wrong")
+                if (response.isSuccessful) {
+                    Logger.logReceivedMovies()
+                    allMovies = response.body()!!
+                } else {
+                    throw Exception("Something went wrong")
+                }
+                initializeMoviesImage()
             }
-            initializeMoviesImage()
-        }
-        return allMovies
+            return allMovies
     }
 
     suspend fun getRandomMovie(): Movie {

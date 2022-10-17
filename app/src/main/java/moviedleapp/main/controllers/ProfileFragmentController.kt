@@ -14,7 +14,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import moviedleapp.main.Repository
+import moviedleapp.main.network.Repository
+import java.net.SocketTimeoutException
 
 class ProfileFragmentController(
     private val profileListener: ProfileListener,
@@ -46,12 +47,12 @@ class ProfileFragmentController(
     }
 
     fun silentSignIn() {
-        mGoogleSignInClient.silentSignIn()
-            .addOnCompleteListener(profileListener.getFragmentActivity()) { task ->
-                handleSignInResult(
-                    task
-                )
-            }
+            mGoogleSignInClient.silentSignIn()
+                .addOnCompleteListener(profileListener.getFragmentActivity()) { task ->
+                    handleSignInResult(
+                        task
+                    )
+                }
     }
 
     fun handleSignInResult(completedTask: Task<GoogleSignInAccount>) {
@@ -60,7 +61,11 @@ class ProfileFragmentController(
             val idToken = account.idToken.toString()
             Log.i(googleTag, "id token")
             CoroutineScope(Dispatchers.Main).launch {
-                Repository.loginByGoogleToken(idToken)
+                try{
+                    Repository.loginByGoogleToken(idToken)
+                }catch (e: SocketTimeoutException){
+                    Log.e("Error","${e.message}")
+                }
             }
             profileListener.hideLoginButton()
             var image: Drawable
@@ -70,9 +75,8 @@ class ProfileFragmentController(
                     profileListener.onSignIn(image,account.givenName.toString())
                 }
             }
-
         } catch (e: ApiException) {
-            Log.w(googleTag, "handleSignInResult:error", e)
+            Log.e(googleTag, "handleSignInResult:error", e)
         }
     }
 }

@@ -1,7 +1,7 @@
 package moviedleapp.main.controllers
 
 import android.graphics.drawable.Drawable
-import moviedleapp.main.Repository
+import moviedleapp.main.network.Repository
 import moviedleapp.main.helpers.Movie
 
 class HomeFragmentController {

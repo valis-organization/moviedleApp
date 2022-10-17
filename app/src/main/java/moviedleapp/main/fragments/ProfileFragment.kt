@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import android.graphics.drawable.Drawable
 import android.os.Bundle
+import android.util.Log
 
 import android.view.LayoutInflater
 import android.view.View
@@ -22,6 +23,7 @@ import kotlinx.coroutines.launch
 import moviedleapp.main.R
 import moviedleapp.main.controllers.ProfileFragmentController
 import moviedleapp.main.controllers.ProfileListener
+import java.net.SocketTimeoutException
 
 
 class ProfileFragment : Fragment() {
@@ -30,9 +32,11 @@ class ProfileFragment : Fragment() {
     //login
     private lateinit var loginButton: SignInButton
     private lateinit var logoutButton: Button
+
     //profile
     private lateinit var profileIcon: ImageView
     private lateinit var profileName: TextView
+
     //card views
     private lateinit var historyAndFavMoviesView: LinearLayout
     private lateinit var profileAndAchievementsView: LinearLayout
@@ -40,6 +44,7 @@ class ProfileFragment : Fragment() {
     private lateinit var favMovies: CardView
     private lateinit var profileInfo: CardView
     private lateinit var achievements: CardView
+
     //controller
     private lateinit var controller: ProfileFragmentController
 
@@ -68,7 +73,7 @@ class ProfileFragment : Fragment() {
                     loginButton.visibility = View.INVISIBLE
                 }
 
-                override fun onSignIn(image: Drawable,name :String ) {
+                override fun onSignIn(image: Drawable, name: String) {
                     profileIcon.setImageDrawable(image)
                     profileName.text = name
                     handleViewsOnLogin()
@@ -142,7 +147,13 @@ class ProfileFragment : Fragment() {
     private fun setButtonsListeners() {
         loginButton.setOnClickListener {
             CoroutineScope(Dispatchers.Default).launch {
-                controller.singIn()
+                try {
+                    controller.singIn()
+                } catch (e: SocketTimeoutException) {
+                    Log.e("Error", "${e.message}")
+                    Toast.makeText(requireContext(), "Connection problems...", Toast.LENGTH_LONG)
+                        .show()
+                }
             }
         }
         logoutButton.setOnClickListener {

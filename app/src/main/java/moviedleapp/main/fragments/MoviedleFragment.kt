@@ -1,11 +1,13 @@
 package moviedleapp.main.fragments
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.SearchView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
@@ -23,6 +25,7 @@ import moviedleapp.main.helpers.moviedleClassic.MovieWIthComparedAttr
 import moviedleapp.main.listView.MoviesToChooseViewAdapter
 import moviedleapp.main.listView.MoviesToChooseViewListener
 import moviedleapp.main.listView.chosenMovies.GuessedMovieAdapter
+import java.net.SocketTimeoutException
 
 
 class MoviedleFragment : Fragment() {
@@ -78,7 +81,12 @@ class MoviedleFragment : Fragment() {
 
         lifecycleScope.launch {
             if (moviesToChoose.isEmpty()) {
-                controller.initMoviesToChooseList(moviesToChoose)
+                try{
+                    controller.initMoviesToChooseList(moviesToChoose)
+                }catch (e: SocketTimeoutException){
+                    Log.e("Error","${e.message}")
+                    Toast.makeText(requireContext(),"Connection problems...", Toast.LENGTH_LONG).show()
+                }
             }
             createMovieListView()
         }
@@ -118,7 +126,7 @@ class MoviedleFragment : Fragment() {
                     controller.guessMovie(query)
                     searchView.setQuery("", false)
                 } else {
-                    showMovieNotFoundNotification()
+                    movieNotFoundInformer.isVisible = true
                 }
 
                 return false
@@ -131,9 +139,9 @@ class MoviedleFragment : Fragment() {
                     adapter.setMovies(filteredMovies)
                     recyclerView.adapter = adapter
                     if (filteredMovies.isEmpty() && newText.isNotBlank()) {
-                        showMovieNotFoundNotification()
+                        movieNotFoundInformer.isVisible = true
                     } else if (filteredMovies.isNotEmpty()) {
-                        hideMovieNotFoundNotification()
+                        movieNotFoundInformer.isVisible = false
                     }
                 }
                 return true
@@ -151,14 +159,6 @@ class MoviedleFragment : Fragment() {
         movieNotFoundInformer = requireView().findViewById(R.id.movie_not_found_view)
         winningMovie = requireView().findViewById(R.id.winning_image)
         winningTextView = requireView().findViewById(R.id.winning_text_view)
-    }
-
-    private fun showMovieNotFoundNotification() {
-        movieNotFoundInformer.isVisible = false
-    }
-
-    private fun hideMovieNotFoundNotification() {
-        movieNotFoundInformer.isVisible = false
     }
 
 }
