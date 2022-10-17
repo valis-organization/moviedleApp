@@ -5,24 +5,30 @@ import moviedleapp.main.helpers.moviedleClassic.MovieWIthComparedAttr
 
 object Logger {
 
-    fun logReceivedMovies() = Log.e("Logowanie","Received all movies from server.")
+    const val logTag = "LOG"
 
-    fun logRandomMovie(title: String) = println("Received random movie from server - $title")
+    fun logReceivedMovies() = Log.i(logTag, "Received all movies from server.")
 
-    fun logReceivedResult() = println("Received result from server")
+    fun logRandomMovie(title: String) = Log.i(logTag, "Received random movie from server - $title")
+
+    fun logReceivedResult() = Log.i(logTag, "Received result from server")
 
     fun logItemClicked(position: Int, title: String) =
-        println("Movie on position $position clicked - Movie name: $title")
+        Log.i(logTag, "Movie on position $position clicked - Movie name: $title")
 
-    fun logFailedGuessing(result : MovieWIthComparedAttr){
-        println("Failed to guess movie. \n"+
-                "Chosen movie - ${result.movie} \n" +
-                "Compared attributes: ${result.comparedAttributes} ")
+    fun logFailedGuessing(result: MovieWIthComparedAttr) {
+        Log.i(
+            logTag, "Failed to guess movie. \n" +
+                    "Chosen movie - ${result.movie} \n" +
+                    "Compared attributes: ${result.comparedAttributes} "
+        )
     }
 
-    fun logSuccessfulGuessing(result: MovieWIthComparedAttr){
-        println("Successfully guessed correct movie. \n" +
-                "Chosen movie - ${result.movie} \n" +
-                "Compared attributes: ${result.comparedAttributes} ")
+    fun logSuccessfulGuessing(result: MovieWIthComparedAttr) {
+        Log.i(
+            logTag, "Successfully guessed correct movie. \n" +
+                    "Chosen movie - ${result.movie} \n" +
+                    "Compared attributes: ${result.comparedAttributes} "
+        )
     }
 }
